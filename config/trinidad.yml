@@ -1,0 +1,6 @@
+# How to set context path
+port: 6789
+web_apps:
+  psr:
+    root_dir: '.'
+    context_path: /psr
