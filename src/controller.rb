@@ -3,27 +3,41 @@ require 'sinatra/custom_logger'
 require 'sinatra/json'
 require 'sinatra/namespace'
 require "sinatra/reloader" if development?
-require 'logger'
 require 'json'
 require_relative 'model'
+require_relative 'password'
 
-set :logger, Logger.new(STDOUT)
+enable :logging
+disable :show_exceptions
+
+@incoming = 0
 
 post '/login' do
   logger.info "logging in..."
-  data = request.body.read
-  json data
+  payload = JSON.parse(request.body.read)
+
+  dataset = User.where { username = payload["username"] }
+  
+  puts dataset
+
+  json payload
 end
 
 namespace '/api' do
   post '/users' do
     logger.info "creating user..."
-    # validation
+
     # save to db
-    u = User.new()
-    u.save
-    # return
     payload = JSON.parse(request.body.read)
-    puts payload["username"]
+    u = User.new(username: payload["username"],
+      password: create_password(payload["password"]))
+    u.save
+    
+    [201, "OK"]
   end
+end
+
+error do
+  halt 500, {'Content-Type' => 'application/json'}, 
+    {message: 'Sorry - ' + env['sinatra.error'].message}.to_json
 end
