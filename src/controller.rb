@@ -4,33 +4,34 @@ require 'sinatra/json'
 require 'sinatra/namespace'
 require "sinatra/reloader" if development?
 require 'json'
-require_relative 'model'
+require_relative '../db/operation'
 require_relative 'password'
+require_relative 'token'
 
 enable :logging
 disable :show_exceptions
 
-@incoming = 0
+before do
+  @payload = JSON.parse(request.body.read)
+end
 
 post '/login' do
-  logger.info "logging in..."
-  payload = JSON.parse(request.body.read)
+  user = db_find_user @payload["username"]
 
-  dataset = User.where(username: payload["username"])
-  username = dataset.first.username
+  if user && db_password_matched(user, @payload["password"])
+    token = generate_token
+    db_manager_user_session(user, token)
+    return [200, token]
+  end
 
-  json({username: username})
+  [500, "username or password incorrect"]
 end
 
 namespace '/api' do
   post '/users' do
-    logger.info "creating user..."
-
-    # save to db
-    payload = JSON.parse(request.body.read)
-    u = User.new(username: payload["username"],
-      password: create_password(payload["password"]))
-    u.save
+    user = User.new(username: @payload["username"],
+      password: create_password(@payload["password"]))
+    user.save
     
     [201, "OK"]
   end
