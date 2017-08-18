@@ -16,11 +16,10 @@ post '/login' do
   logger.info "logging in..."
   payload = JSON.parse(request.body.read)
 
-  dataset = User.where { username = payload["username"] }
-  
-  puts dataset
+  dataset = User.where(username: payload["username"])
+  username = dataset.first.username
 
-  json payload
+  json({username: username})
 end
 
 namespace '/api' do
