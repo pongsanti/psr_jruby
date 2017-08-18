@@ -5,6 +5,7 @@ require 'sinatra/namespace'
 require "sinatra/reloader" if development?
 require 'logger'
 require 'json'
+require_relative 'model'
 
 set :logger, Logger.new(STDOUT)
 
@@ -17,6 +18,11 @@ end
 namespace '/api' do
   post '/users' do
     logger.info "creating user..."
+    # validation
+    # save to db
+    u = User.new()
+    u.save
+    # return
     payload = JSON.parse(request.body.read)
     puts payload["username"]
   end
