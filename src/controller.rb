@@ -23,19 +23,26 @@ post '/login' do
   if user && db_password_matched(user, @payload["password"])
     token = generate_token
     db_manager_user_session(user, token)
-    return [200, token]
+    return [200, json(token: token)]
   end
 
-  [500, "username or password incorrect"]
+  [500, json(message: "username or password incorrect")]
 end
 
 namespace '/api' do
   post '/users' do
-    user = User.new(username: @payload["username"],
+    username = @payload["username"]
+    if db_find_user(username)
+      return [500, json(message: "User already existed")]
+    end
+
+    user = User.new(
+      display_name: @payload["display_name"],
+      username: @payload["username"],
       password: create_password(@payload["password"]))
     user.save
     
-    [201, "OK"]
+    [201, json(result: "OK")]
   end
 end
 
