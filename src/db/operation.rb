@@ -23,4 +23,9 @@ module DbOp
     session = UserSession.new(token: token).save
     user.user_session = session
   end
+
+  def db_delete_user_session(token)
+    session = UserSession.where(token: token).first
+    session.delete if session
+  end
 end
