@@ -4,12 +4,14 @@ require 'sinatra/json'
 require 'sinatra/namespace'
 require "sinatra/reloader" if development?
 require 'json'
-require_relative '../db/operation'
+require_relative 'db/operation'
 require_relative 'password'
 require_relative 'token'
 
 enable :logging
 disable :show_exceptions
+
+include DbOp
 
 before do
   @payload = JSON.parse(request.body.read)
