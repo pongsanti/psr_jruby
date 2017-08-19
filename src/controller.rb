@@ -14,6 +14,7 @@ disable :show_exceptions
 include DbOp
 
 before do
+  @x_auth_header = request.env["HTTP_X_AUTHORIZATION"]
   @payload = JSON.parse(request.body.read)
 end
 
@@ -44,7 +45,13 @@ namespace '/api' do
     
     [201, json(result: "OK")]
   end
+  
+  delete '/sessions' do
+    logger.info @x_auth_header
+  end
 end
+
+
 
 error do
   halt 500, {'Content-Type' => 'application/json'}, 
