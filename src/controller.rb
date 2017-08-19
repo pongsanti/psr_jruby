@@ -30,31 +30,8 @@ post '/login' do
   [500, json(message: "username or password incorrect")]
 end
 
-namespace '/api' do
-  post '/users' do
-    username = @payload["username"]
-    if db_find_user(username)
-      return [500, json(message: "User already existed")]
-    end
-
-    user = User.new(
-      display_name: @payload["display_name"],
-      username: @payload["username"],
-      password: create_password(@payload["password"]))
-    user.save
-    
-    [201, json(result: "OK")]
-  end
-  
-  delete '/sessions' do
-    logger.info @x_auth_header
-    db_delete_user_session(@x_auth_header)
-
-    [200, json(result: "OK")]
-  end
-end
-
-
+require_relative 'routes/users'
+require_relative 'routes/sessions'
 
 error do
   halt 500, {'Content-Type' => 'application/json'}, 
