@@ -10,3 +10,7 @@ gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'bcrypt'
 gem 'json'
+
+group :test do
+  gem 'rspec'
+end
