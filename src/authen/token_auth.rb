@@ -9,9 +9,9 @@ module TokenAuth
     token = token(env)
     return false if token.empty?
     
-    user_session = db_find_user_session(token)
+    user_session = DB.db_find_user_session(token)
     if user_session
-      @user = db_find_user_by_id(user_session.user_id)
+      @user = DB.db_find_user_by_id(user_session.user_id)
     else
       raise UnAuthError, "Unauthenticated request"
     end

@@ -1,16 +1,13 @@
 #greeting: Welcome to my file configurable application
-development:
-  db:
-    host: localhost
-    port: 3306
-    name: sts 
-test:
-  db:
-    host: localhost
-    port: 3306
-    name: sts 
-production:
-  db:
-    host: localhost
-    port: 3306
-    name: sts
+db_host:
+  development: localhost
+  test: localhost
+  production: localhost
+db_port:
+  development: 3306
+  test: 3306
+  production: 3306  
+db_name:
+  development: sts
+  test: sts
+  production: sts

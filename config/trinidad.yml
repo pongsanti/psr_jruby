@@ -1,5 +1,5 @@
 # How to set context path
-port: 6789
+port: 4567
 web_apps:
   psr:
     root_dir: '.'
