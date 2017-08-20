@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/config_file'
 require 'sinatra/custom_logger'
 require 'sinatra/json'
 require 'sinatra/namespace'
@@ -9,14 +10,10 @@ require_relative 'authen/token_auth'
 require_relative 'password'
 require_relative 'token'
 
-HOST = 'localhost'
-PORT = '3306'
-DATABASE_NAME = 'sts'
-DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
+config_file 'config.yml'
+DB_CONFIG = settings.db
+DB_URL = "jdbc:mysql://#{DB_CONFIG[:host]}:#{DB_CONFIG[:port]}/#{DB_CONFIG[:name]}?user=root&password=root&charset=utf8"
 DB = SmartTrack::Database.new(DB_URL)
-
-puts 'new db'
-puts DB
 
 enable :logging
 disable :show_exceptions
