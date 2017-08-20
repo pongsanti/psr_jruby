@@ -4,15 +4,23 @@ require 'sinatra/json'
 require 'sinatra/namespace'
 require "sinatra/reloader" if development?
 require 'json'
-require_relative 'db/operation'
+require_relative 'database/connection'
 require_relative 'authen/token_auth'
 require_relative 'password'
 require_relative 'token'
 
+HOST = 'localhost'
+PORT = '3306'
+DATABASE_NAME = 'sts'
+DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
+DB = SmartTrack::Database.new(DB_URL)
+
+puts 'new db'
+puts DB
+
 enable :logging
 disable :show_exceptions
 
-include DbOp
 include TokenAuth
 
 before do
@@ -30,11 +38,11 @@ get '/protected' do
   end
 
 post '/login' do
-  user = db_find_user @payload['username']
+  user = DB.db_find_user @payload['username']
 
-  if user && db_password_matched(user, @payload['password'])
+  if user && DB.db_password_matched(user, @payload['password'])
     token = generate_token
-    db_manager_user_session(user, token)
+    DB.db_manager_user_session(user, token)
     return [200, json(token: token)]
   end
 

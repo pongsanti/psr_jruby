@@ -11,6 +11,8 @@ GEM
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
+    rack-test (0.7.0)
+      rack (>= 1.0, < 3)
     rspec (3.6.0)
       rspec-core (~> 3.6.0)
       rspec-expectations (~> 3.6.0)
@@ -46,6 +48,7 @@ DEPENDENCIES
   bcrypt
   jdbc-mysql
   json
+  rack-test
   rspec
   sequel
   sinatra
