@@ -1,7 +1,7 @@
 namespace '/api' do
   post '/users' do
     username = @payload["username"]
-    if DB.db_find_user(username)
+    if DB.find_user(username)
       return [500, json(message: "User already existed")]
     end
 

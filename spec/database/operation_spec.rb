@@ -17,12 +17,12 @@ describe SmartTrack::Operation do
   it 'should find user by username' do
     SmartTrack::User.new(username: 'joe', password: 'xxx').save
 
-    user = @db.db_find_user('joe')
+    user = @db.find_user('joe')
     expect(user).to_not be_nil
   end
 
   it 'should not find user by username' do
-    user = @db.db_find_user('mockuser')
+    user = @db.find_user('mockuser')
     expect(user).to be_nil
   end
 end

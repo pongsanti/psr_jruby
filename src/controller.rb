@@ -35,11 +35,11 @@ get '/protected' do
   end
 
 post '/login' do
-  user = DB.db_find_user @payload['username']
+  user = DB.find_user @payload['username']
 
-  if user && DB.db_password_matched(user, @payload['password'])
+  if user && DB.password_matched(user, @payload['password'])
     token = generate_token
-    DB.db_manager_user_session(user, token)
+    DB.manager_user_session(user, token)
     return [200, json(token: token)]
   end
 
