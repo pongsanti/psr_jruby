@@ -6,8 +6,8 @@ module TokenAuth
   end
   
   def authorize? env
-    token = token(env)
-    return false if token.empty?
+    token = token(env) || ''
+    raise UnAuthError, "Unauthenticated request" if not token || token.empty?
     
     user_session = DB.db_find_user_session(token)
     if user_session

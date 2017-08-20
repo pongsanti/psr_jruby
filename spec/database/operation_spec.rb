@@ -1,9 +1,9 @@
-require 'database/connection'
+require 'database/base'
 
-HOST = 'localhost'
-PORT = '3306'
-DATABASE_NAME = 'sts'
-DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
+# HOST = 'localhost'
+# PORT = '3306'
+# DATABASE_NAME = 'sts'
+# DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
 
 describe SmartTrack::Operation do
   before(:all) do

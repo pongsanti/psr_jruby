@@ -14,7 +14,7 @@ enable :logging
 disable :show_exceptions
 
 config_file '../config.yml'
-#puts settings.methods(false).inspect
+
 DB_URL = "jdbc:mysql://#{settings.db_host}:\
 #{settings.db_port}/\
 #{settings.db_name}?user=root&password=root&charset=utf8"
