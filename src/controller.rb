@@ -13,7 +13,7 @@ require_relative 'token'
 enable :logging
 disable :show_exceptions
 
-config_file '../config.yml'
+config_file '../config/sinatra.yml'
 
 DB_URL = "jdbc:mysql://#{settings.db_host}:\
 #{settings.db_port}/\
