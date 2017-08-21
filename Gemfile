@@ -10,6 +10,7 @@ gem 'sinatra'
 gem 'sinatra-contrib'
 gem 'bcrypt'
 gem 'json'
+gem 'trinidad', '~>1.5.0.B2'
 
 group :test do
   gem 'rspec'
