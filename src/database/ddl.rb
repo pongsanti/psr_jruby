@@ -3,7 +3,7 @@ require 'mysql-connector-java-5.1.42-bin'
 
 HOST = 'localhost'
 PORT = '3306'
-DATABASE_NAME = 'sts'
+DATABASE_NAME = 'sts_test'
 
 DB = Sequel.connect("jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8")
 

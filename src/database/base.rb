@@ -11,10 +11,10 @@ module SmartTrack
     end
 
     def set_extensions
-      @db.extension :identifier_mangling
-      @db.identifier_input_method = nil
-      @db.identifier_output_method = nil
-      @db.quote_identifiers = false      
+      db.extension :identifier_mangling
+      db.identifier_input_method = nil
+      db.identifier_output_method = nil
+      db.quote_identifiers = false      
     end
 
     def initialize_models

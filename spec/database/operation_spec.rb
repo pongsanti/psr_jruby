@@ -1,9 +1,7 @@
-require 'database/base'
+require_relative 'test_config'
+include SmartTrack::Test
 
-# HOST = 'localhost'
-# PORT = '3306'
-# DATABASE_NAME = 'sts'
-# DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
+require 'database/base'
 
 describe SmartTrack::Operation do
   before(:all) do
