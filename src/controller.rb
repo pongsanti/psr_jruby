@@ -5,6 +5,12 @@ require 'sinatra/json'
 require 'sinatra/namespace'
 require "sinatra/reloader" if development?
 require 'json'
+
+puts "env = #{ENV["SINATRA_ENV"]}"
+set :environment, :test if ENV["SINATRA_ENV"] == 'test'
+puts development?
+puts test?
+
 require_relative 'database/base'
 require_relative 'authen/token_auth'
 require_relative 'password'

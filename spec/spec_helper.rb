@@ -16,6 +16,7 @@
 
 $LOAD_PATH << File.expand_path('src')
 #puts $LOAD_PATH
+ENV['SINATRA_ENV'] = 'test'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
