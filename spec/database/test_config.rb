@@ -3,6 +3,6 @@ module SmartTrack
     HOST = 'localhost'
     PORT = '3306'
     DATABASE_NAME = 'sts_test'
-    DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
+    DB_TEST_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
   end
 end

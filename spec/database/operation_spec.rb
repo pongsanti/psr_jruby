@@ -5,7 +5,7 @@ require 'database/base'
 
 describe SmartTrack::Operation do
   before(:all) do
-    @db = SmartTrack::Database.new(DB_URL)
+    @db = SmartTrack::Database.new(DB_TEST_URL)
   end
 
   around(:each) do |example|
