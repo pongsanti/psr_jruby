@@ -7,9 +7,9 @@ describe SmartTrack::Operation do
   end
 
   it 'should find user by username' do
-    SmartTrack::User.new(username: 'joe', password: 'xxx').save
+    SmartTrack::User.new(username: 'jane@gmail.com', password: 'xxx').save
 
-    user = DB.find_user('joe')
+    user = DB.find_user('jane@gmail.com')
     expect(user).to_not be_nil
   end
 
