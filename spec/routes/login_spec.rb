@@ -15,14 +15,14 @@ describe 'SmartTrack' do
     DB.db.transaction(rollback: :always, auto_savepoint: true) {example.run}
   end
 
-  username = 'john@gmail.com'
+  email = 'john@gmail.com'
   password = '1234'
-  request = {username: username, password: password}.to_json
+  request = {email: email, password: password}.to_json
 
   context 'in unauthorized user context' do
     it 'can log user in and return token' do
       # prepare
-      create_user(username, create_password(password))
+      create_user(email, create_password(password))
       # execute
       post_with_json '/login', request
       
@@ -35,7 +35,7 @@ describe 'SmartTrack' do
     token = 'mocktoken'
     it 'can log user in and return a new token' do
       # prepare
-      user = create_user(username, create_password(password))
+      user = create_user(email, create_password(password))
       create_session(user, token)
       # execute
       post_with_json '/login', request

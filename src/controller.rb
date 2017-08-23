@@ -41,7 +41,7 @@ get '/protected' do
   end
 
 post '/login' do
-  user = DB.find_user @payload['username']
+  user = DB.find_user @payload['email']
 
   if user && DB.password_matched(user, @payload['password'])
     token = generate_token
@@ -49,7 +49,7 @@ post '/login' do
     return [200, json(token: token)]
   end
 
-  [500, json(message: 'Username or password incorrect')]
+  [500, json(message: 'Email or password incorrect')]
 end
 
 require_relative 'routes/users'

@@ -16,7 +16,8 @@ module SmartTrack
     plugin :validation_helpers
     def validate
       super
-      validates_presence [:username, :password]
+      validates_presence [:email, :password]
+      validates_format /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i, :email
     end
   end
 

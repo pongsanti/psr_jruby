@@ -9,7 +9,7 @@ describe SmartTrack::Operation do
   end
 
   context 'in user existed context' do
-    it 'can find user by username' do
+    it 'can find user by email' do
       create_user('jane@gmail.com')
 
       user = DB.find_user('jane@gmail.com')
@@ -18,7 +18,7 @@ describe SmartTrack::Operation do
   end
 
   context 'in user not existed context' do
-    it 'cannot find user by username' do
+    it 'cannot find user by email' do
       user = DB.find_user('mockuser')
       expect(user).to be_nil
     end

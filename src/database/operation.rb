@@ -6,12 +6,12 @@ module SmartTrack
       User.where(id: id).first
     end
 
-    def find_user(username)
-      return User.where(username: username).first
+    def find_user(email)
+      return User.where(email: email).first
     end
   
     def password_matched(user, password)
-      username = user.username
+      email = user.email
       hash = new_password_instance(user.password)
       return hash == password
     end

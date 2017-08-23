@@ -16,7 +16,7 @@ describe 'SmartTrack' do
 
   mocktoken = 'mocktoken'
   json_req = {display_name: 'New_Guy',
-    username: 'new_user@gmail.com',
+    email: 'new_user@gmail.com',
     password: '1234abcd'}.to_json
 
   context 'in unauthenticated context' do
