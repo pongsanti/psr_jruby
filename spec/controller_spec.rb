@@ -19,7 +19,7 @@ describe 'SmartTrack' do
       get '/protected'
       
       expect(last_response.status).to eq(500)
-      expect(last_response.body).to include('Unauthorized')
+      expect(last_response.body).to include('Unauthenticated')
     end
   end
 

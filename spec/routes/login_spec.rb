@@ -20,7 +20,7 @@ describe 'SmartTrack' do
   request = {username: username, password: password}.to_json
 
   context 'in unauthorized user context' do
-    it 'logging user in and return token' do
+    it 'can log user in and return token' do
       # prepare
       create_user(username, create_password(password))
       # execute
@@ -33,7 +33,7 @@ describe 'SmartTrack' do
 
   context 'in authorized user context' do
     token = 'mocktoken'
-    it 'logging user with new token' do
+    it 'can log user in and return a new token' do
       # prepare
       user = create_user(username, create_password(password))
       create_session(user, token)
@@ -52,10 +52,3 @@ describe 'SmartTrack' do
   end
 
 end
-
-# def post_with_json(uri, json)
-#   # No assertion in this, we just demonstrate how you can post a JSON-encoded string.
-#   # By default, Rack::Test will use HTTP form encoding if you pass in a Hash as the
-#   # parameters, so make sure that `json` below is already a JSON-serialized string.
-#   post(uri, json, { 'CONTENT_TYPE' => 'application/json' })
-# end

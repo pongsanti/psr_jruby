@@ -1,5 +1,7 @@
 namespace '/api' do
   post '/users' do
+    authorize? env
+
     username = @payload["username"]
     if DB.find_user(username)
       return [500, json(message: "User already existed")]

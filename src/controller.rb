@@ -61,5 +61,5 @@ error do
 end
 
 error UnAuthError do
-  halt 500, {}, json(message: 'Unauthorized request')
+  halt 500, {}, json(message: 'Unauthenticated request')
 end
