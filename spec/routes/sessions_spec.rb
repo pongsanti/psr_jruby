@@ -1,8 +1,10 @@
 require 'rack/test'
 require 'controller'
+require_relative '../db_helper'
 
 describe 'SmartTrack' do
   include Rack::Test::Methods
+  include SmartTrack::Test::Helper
 
   def app
     Sinatra::Application
@@ -15,8 +17,7 @@ describe 'SmartTrack' do
   context 'in authenticated context' do
     it 'can delete session' do
       token = 'mocktoken'
-      user = SmartTrack::User.new(username: 'john@gmail.com', password: 'xxx').save
-      DB.insert_user_session(user, token)
+      create_user_session 'john@gmail.com', token
       
       header 'X-Authorization', token
       delete '/api/sessions'
