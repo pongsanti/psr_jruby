@@ -22,5 +22,6 @@ module SmartTrack
   end
 
   class UserSession < Sequel::Model(:user_sessions)
+    many_to_one :user
   end
 end
