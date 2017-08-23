@@ -1,7 +1,10 @@
 require_relative '../password'
 
-module SmartTrack
+module SmartTrack  
   module Operation
+    
+    ONE_MONTH_IN_MS = (60*60*24*30)
+    
     def find_user_by_id(id)
       User.where(id: id).first
     end
@@ -16,13 +19,13 @@ module SmartTrack
       return hash == password
     end
 
-    def manager_user_session(user, token)
+    def manager_user_session(user, token, expired_at = Time.now + ONE_MONTH_IN_MS)
       user.user_session.delete if user.user_session
-      insert_user_session(user, token)
+      insert_user_session(user, token, expired_at)
     end
 
-    def insert_user_session(user, token)
-      session = UserSession.new(token: token).save
+    def insert_user_session(user, token, expired_at = Time.now + ONE_MONTH_IN_MS)
+      session = UserSession.new(token: token, expired_at: expired_at).save
       user.user_session = session
     end
 

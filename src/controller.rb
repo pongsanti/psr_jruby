@@ -14,7 +14,6 @@ set :environment, :test if ENV["SINATRA_ENV"] == 'test'
 require_relative 'database/base'
 require_relative 'authen/token_auth'
 require_relative 'password'
-require_relative 'token'
 
 enable :logging
 disable :show_exceptions
@@ -26,7 +25,7 @@ DB_URL = "jdbc:mysql://#{settings.db_host}:\
 #{settings.db_name}?user=root&password=root&charset=utf8"
 DB = SmartTrack::Database.new(DB_URL)
 
-include TokenAuth
+include SmartTrack::TokenAuth
 
 before do
   req_body = request.body.read
