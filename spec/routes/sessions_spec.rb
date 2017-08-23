@@ -12,27 +12,18 @@ describe 'SmartTrack' do
     DB.db.transaction(rollback: :always, auto_savepoint: true) {example.run}
   end
 
-  context 'in unauthorized user context' do
-    it 'cannot access authorized page' do
-      get '/protected'
-      
-      expect(last_response.status).to eq(500)
-      expect(last_response.body).to include('Unauthorized')
-    end
-  end
-
-  context 'in authorized user context' do
-    token = 'mocktoken'
-
-    it 'can access authorized page' do
+  context 'in authenticated context' do
+    it 'can delete session' do
+      token = 'mocktoken'
       user = SmartTrack::User.new(username: 'john@gmail.com', password: 'xxx').save
       DB.insert_user_session(user, token)
       
       header 'X-Authorization', token
-      get '/protected'
+      delete '/api/sessions'
 
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('authenticated')
+      expect(DB.find_user_session(token)).to be_nil
     end
   end
+  
 end
