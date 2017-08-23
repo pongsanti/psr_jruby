@@ -19,25 +19,25 @@ enable :logging
 disable :show_exceptions
 
 config_file '../config/sinatra.yml'
-
-DB_URL = "jdbc:mysql://#{settings.db_host}:\
+DB = SmartTrack::Database.new("jdbc:mysql://#{settings.db_host}:\
 #{settings.db_port}/\
-#{settings.db_name}?user=root&password=root&charset=utf8"
-DB = SmartTrack::Database.new(DB_URL)
+#{settings.db_name}?user=root&password=root&charset=utf8")
 
 include SmartTrack::TokenAuth
 
+# Hooks
 before do
   req_body = request.body.read
   @payload = JSON.parse(req_body) unless req_body.empty?
 end
 
+# Routes
 get '/protected' do
   authorize? env
 
   content_type :json
   json(message: 'This is an authenticated request!')
-  end
+end
 
 post '/login' do
   user = DB.find_user @payload['email']
@@ -54,6 +54,7 @@ end
 require_relative 'routes/users'
 require_relative 'routes/sessions'
 
+# Error handling
 error do
   halt 500, {'Content-Type' => 'application/json'}, 
     {message: 'Sorry - ' + env['sinatra.error'].message}.to_json
