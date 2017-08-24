@@ -4,7 +4,7 @@ module SmartTrack::Test
   module Helper
     def create_user(email, password = 'xxx')
       hash = BCrypt::Password.create(password)
-      user = SmartTrack::User.new(email: email, password: hash).save
+      user = SmartTrack::Database::User.new(email: email, password: hash).save
     end
 
     def create_session(user, session_token)

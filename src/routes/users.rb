@@ -7,7 +7,7 @@ namespace '/api' do
       return [500, json(message: "User already existed")]
     end
 
-    user = SmartTrack::User.new(
+    user = SmartTrack::Database::User.new(
       display_name: @payload["display_name"],
       email: @payload["email"],
       password: create_password(@payload["password"]))

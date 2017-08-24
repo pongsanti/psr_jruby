@@ -19,7 +19,7 @@ enable :logging
 disable :show_exceptions
 
 config_file '../config/sinatra.yml'
-DB = SmartTrack::Database.new("jdbc:mysql://#{settings.db_host}:\
+DB = SmartTrack::Database::Connection.new("jdbc:mysql://#{settings.db_host}:\
 #{settings.db_port}/\
 #{settings.db_name}?user=root&password=root&charset=utf8")
 

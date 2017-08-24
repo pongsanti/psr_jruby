@@ -1,7 +1,7 @@
 require 'controller'
 require_relative '../db_helper'
 
-describe SmartTrack::Operation do
+describe SmartTrack::Database do
   include SmartTrack::Test::Helper
 
   around(:each) do |example|
