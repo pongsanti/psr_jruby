@@ -23,7 +23,7 @@ module SmartTrack
         require_relative 'model'
       end
       
-      require_relative 'operation'
+      require_relative 'util'
       include SmartTrack::Database::Util
     end
 
