@@ -1,6 +1,5 @@
 require 'rack/test'
 require 'controller'
-require 'password'
 require_relative '../db_helper'
 
 describe 'SmartTrack' do
@@ -22,7 +21,7 @@ describe 'SmartTrack' do
   context 'in unauthorized user context' do
     it 'can log user in and return token' do
       # prepare
-      create_user(email, create_password(password))
+      create_user(email, password)
       # execute
       post_with_json '/login', request
       
@@ -35,7 +34,7 @@ describe 'SmartTrack' do
     token = 'mocktoken'
     it 'can log user in and return a new token' do
       # prepare
-      user = create_user(email, create_password(password))
+      user = create_user(email, password)
       create_session(user, token)
       # execute
       post_with_json '/login', request
