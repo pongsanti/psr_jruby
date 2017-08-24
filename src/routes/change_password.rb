@@ -15,7 +15,7 @@ namespace '/api' do
       raise SmartTrack::InputError, 'password is empty'
     end
 
-    @user.password = create_password(@payload[new_password])    
+    DB.update_password(@user, new_password)
     [200, json(result: "Password updated")]
   end
 end

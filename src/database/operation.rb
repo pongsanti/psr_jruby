@@ -20,6 +20,11 @@ module SmartTrack
         return hash == password
       end
 
+      def update_password(user, password)
+        hash = create_password(password)
+        user.update(password: hash)
+      end
+
       def manager_user_session(user, token, expired_at = Time.now + ONE_MONTH_IN_MS)
         user.user_session.delete if user.user_session
         insert_user_session(user, token, expired_at)
