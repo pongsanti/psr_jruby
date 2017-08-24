@@ -15,28 +15,28 @@ describe 'SmartTrack' do
   end
 
   mocktoken = 'mocktoken'
-  json_req = {display_name: 'New_Guy',
-    email: 'new_user@gmail.com',
-    password: '1234abcd'}.to_json
+  json_req = {old_password: 'xxx',
+    new_password: '1234'}.to_json
 
   context 'in unauthenticated context' do
-    it 'cannot creates user' do
-      post_with_json '/api/users', json_req
+    it 'cannot change password' do
+
+      header 'X-Authorization', 'not_valid_token'
+      post_with_json '/api/change_password', json_req
 
       expect(last_response.status).to eq(500)
-      expect(last_response.body).to include('Unauthen')
     end
   end
 
   context 'in authenticated context' do
-    it 'can creates new user' do
-    
+    it 'can change password' do
       create_user_session('admin@gmail.com', mocktoken)
-      
-      header 'X-Authorization', mocktoken
-      post_with_json '/api/users', json_req
 
-      expect(last_response.status).to eq(201)
+      header 'X-Authorization', mocktoken
+      post_with_json '/api/change_password', json_req
+
+      expect(last_response.status).to eq(200)
+      expect(last_response.body).to include('updated')
     end
   end
   

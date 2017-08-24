@@ -1,7 +1,10 @@
+require 'bcrypt'
+
 module SmartTrack::Test
   module Helper
     def create_user(email, password = 'xxx')
-      user = SmartTrack::User.new(email: email, password: password).save
+      hash = BCrypt::Password.create(password)
+      user = SmartTrack::User.new(email: email, password: hash).save
     end
 
     def create_session(user, session_token)

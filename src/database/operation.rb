@@ -1,3 +1,4 @@
+require 'bcrypt'
 require_relative '../password'
 
 module SmartTrack  
@@ -14,7 +15,6 @@ module SmartTrack
     end
   
     def password_matched(user, password)
-      email = user.email
       hash = new_password_instance(user.password)
       return hash == password
     end
