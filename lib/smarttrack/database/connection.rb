@@ -1,30 +1,22 @@
-require 'sequel'
+require 'rom'
 
 module SmartTrack
   module Database
 
     class Connection
-      attr_reader :db
+      attr_reader :rom
 
       def initialize(db_url)
-        @db = Sequel.connect(db_url)
-        set_extensions
-        initialize_models
-      end
-
-      def set_extensions
-        db.extension :identifier_mangling
-        db.identifier_input_method = nil
-        db.identifier_output_method = nil
-        db.quote_identifiers = false      
+        @rom = ROM.container(:sql, db_url)
+        #initialize_models
       end
 
       def initialize_models
         require_relative 'model'
       end
       
-      require_relative 'util'
-      include SmartTrack::Database::Util
+      #require_relative 'util'
+      #include SmartTrack::Database::Util
     end
 
   end
