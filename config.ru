@@ -1,5 +1,5 @@
 #\ -w -s Trinidad
 
-require_relative 'src/controller'
+require_relative 'lib/controller'
 
 run Sinatra::Application

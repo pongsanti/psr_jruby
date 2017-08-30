@@ -16,7 +16,7 @@
 
 module SmartTrack; end
 
-$LOAD_PATH << File.expand_path('src')
+$LOAD_PATH << File.expand_path('lib')
 #puts $LOAD_PATH
 ENV['SINATRA_ENV'] = 'test'
 require_relative 'controller_helper'

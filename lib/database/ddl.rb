@@ -8,7 +8,11 @@ module SmartTrack
     DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
 
     @rom = ROM.container(:sql, DB_URL) do |conf|
-      conf.default.drop_table(:user_sessions, :users)
+      begin
+        conf.default.drop_table(:user_sessions, :users)
+      rescue
+        puts 'Tables not existed'
+      end
 
       conf.default.create_table(:users) do
         primary_key :id
@@ -17,6 +21,7 @@ module SmartTrack
         String :display_name
         DateTime :created_at
         DateTime :updated_at
+        DateTime :deleted_at
       end
 
       conf.default.create_table(:user_sessions) do
