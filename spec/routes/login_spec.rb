@@ -1,5 +1,5 @@
 require 'rack/test'
-require 'controller'
+require 'smarttrack'
 require_relative '../db_helper'
 
 describe 'SmartTrack' do

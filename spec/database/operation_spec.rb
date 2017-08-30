@@ -1,4 +1,4 @@
-require 'controller'
+require 'smarttrack'
 require_relative '../db_helper'
 
 describe SmartTrack::Database do
