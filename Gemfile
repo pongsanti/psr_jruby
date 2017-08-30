@@ -4,7 +4,9 @@ source "https://rubygems.org"
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 # gem "rails"
-gem 'sequel'
+#gem 'sequel'
+gem 'rom-repository'
+gem 'rom-sql'
 gem 'jdbc-mysql'
 gem 'sinatra'
 gem 'sinatra-contrib'
