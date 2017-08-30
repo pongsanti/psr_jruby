@@ -1,5 +1,5 @@
 require 'bcrypt'
-require_relative '../password'
+require_relative '../../password'
 
 module SmartTrack
   module Database

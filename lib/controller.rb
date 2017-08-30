@@ -11,7 +11,7 @@ set :environment, :test if ENV["SINATRA_ENV"] == 'test'
 # puts development?
 # puts test?
 
-require_relative 'database/connection'
+require_relative 'smarttrack/database/connection'
 require_relative 'authen/token_auth'
 require_relative 'password'
 
