@@ -12,6 +12,7 @@ set :environment, :test if ENV["SINATRA_ENV"] == 'test'
 # puts test?
 
 require_relative 'smarttrack/database'
+require_relative 'smarttrack/model'
 require_relative 'authen/token_auth'
 require_relative 'password'
 
@@ -40,38 +41,23 @@ get '/protected' do
 end
 
 post '/login' do
-  # user = DB.find_user @payload['email']
-  user_repo = SmartTrack::Database::Repository::UserRepo.new(rom)
-  user = user_repo.query_first(email: @payload['email'])
-  puts user.email
-  if user && password_matched(user.password, @payload['password'])
-    user_session_repo = SmartTrack::Database::Repository::UserSessionRepo.new(rom)
-    user_session = user_session_repo.query_first(user_id: user.id)
+  user_model = SmartTrack::Model::User.new(rom)
+  user = user_model.find_by_email(@payload['email'])
+  if user && user_model.password_matched(user.password, @payload['password'])
+    user_session_model = SmartTrack::Model::UserSession.new(rom)
+    user_session = user_session_model.find_by_user_id(user.id)
 
-    if user_session
-      puts user_session.id
-      user_session_repo.delete(user_session.id)
-    end
-
-    token = generate_token
-    user_session = user_session_repo.create(token: token, user_id: user.id, expired_at: Time.now + (60*60*24*30))
+    user_session_model.repo.delete(user_session.id) if user_session
+    
+    user_session = user_session_model.repo.create(
+      token: user_session_model.generate_session_token,
+      user_id: user.id,
+      expired_at: Time.now + (60*60*24*30))
 
     return [200, json(token: user_session.token)]
   end
-  
-  
-  # if user && DB.password_matched(user, @payload['password'])
-  #   token = generate_token
-  #   DB.manager_user_session(user, token)
-  #   return [200, json(token: token)]
-  # end
 
   [500, json(message: 'Email or password incorrect')]
-end
-
-def password_matched(user_pass, password)
-  hash = new_password_instance(user_pass)
-  return hash == password  
 end
 
 # require_relative 'routes/users'
