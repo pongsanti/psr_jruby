@@ -3,12 +3,17 @@ require 'bcrypt'
 module SmartTrack::Test
   module Helper
     def create_user(email, password = 'xxx')
+      user_model = SmartTrack::Model::User.new(CONN)
       hash = BCrypt::Password.create(password)
-      user = SmartTrack::Database::User.new(email: email, password: hash).save
+      user = user_model.repo.create(email: email, password: hash)
     end
 
     def create_session(user, session_token)
-      DB.insert_user_session(user, session_token)
+      session_model = SmartTrack::Model::UserSession.new(CONN)
+      session_model.repo.create(
+        token: session_model.generate_session_token,
+        user_id: user.id,
+        expired_at: Time.now + (60*60*24*30))
     end
 
     def create_user_session(email, session_token)

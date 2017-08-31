@@ -8,6 +8,7 @@ module SmartTrack::Database::Repository
   end
 
   class UserRepo < ROM::Repository[:users]
+    commands :create
     
     def query_first(conditions)
       users.map_to(User).where(conditions).first

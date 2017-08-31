@@ -20,9 +20,14 @@ enable :logging
 disable :show_exceptions
 
 config_file File.expand_path('config/sinatra.yml')
-rom = SmartTrack::Database::Connection.new("jdbc:mysql://#{settings.db_host}:\
+
+db_url = "jdbc:mysql://#{settings.db_host}:\
 #{settings.db_port}/\
-#{settings.db_name}?user=root&password=root&charset=utf8").rom
+#{settings.db_name}?user=root&password=root&charset=utf8"
+
+db_connection = SmartTrack::Database::Connection.new(db_url)
+CONN = db_connection.rom
+SEQUEL = db_connection.sequel
 
 include SmartTrack::TokenAuth
 
@@ -41,10 +46,10 @@ get '/protected' do
 end
 
 post '/login' do
-  user_model = SmartTrack::Model::User.new(rom)
+  user_model = SmartTrack::Model::User.new(CONN)
   user = user_model.find_by_email(@payload['email'])
   if user && user_model.password_matched(user.password, @payload['password'])
-    user_session_model = SmartTrack::Model::UserSession.new(rom)
+    user_session_model = SmartTrack::Model::UserSession.new(CONN)
     user_session = user_session_model.find_by_user_id(user.id)
 
     user_session_model.repo.delete(user_session.id) if user_session

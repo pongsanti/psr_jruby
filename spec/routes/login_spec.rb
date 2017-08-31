@@ -11,7 +11,7 @@ describe 'SmartTrack' do
   end
 
   around(:each) do |example|
-    DB.db.transaction(rollback: :always, auto_savepoint: true) {example.run}
+    SEQUEL.transaction(rollback: :always, auto_savepoint: true) {example.run}
   end
 
   email = 'john@gmail.com'
