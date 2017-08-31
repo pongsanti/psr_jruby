@@ -10,8 +10,10 @@ describe 'SmartTrack' do
     Sinatra::Application
   end
 
+  
   around(:each) do |example|
-    SEQUEL.transaction(rollback: :always, auto_savepoint: true) {example.run}
+    SmartTrack::Database::Container.resolve(:sequel)
+      .transaction(rollback: :always, auto_savepoint: true) {example.run}
   end
 
   email = 'john@gmail.com'

@@ -26,13 +26,15 @@ db_url = "jdbc:mysql://#{settings.db_host}:\
 #{settings.db_name}?user=root&password=root&charset=utf8"
 
 db_connection = SmartTrack::Database::Connection.new(db_url)
-CONN = db_connection.rom
-SEQUEL = db_connection.sequel
+SmartTrack::Database::Container.register(:db_connection, db_connection)
+SmartTrack::Database::Container.register(:rom, db_connection.rom)
+SmartTrack::Database::Container.register(:sequel, db_connection.sequel)
 
 include SmartTrack::TokenAuth
 
 # Hooks
 before do
+  @rom = SmartTrack::Database::Container.resolve(:rom)
   req_body = request.body.read
   @payload = JSON.parse(req_body) unless req_body.empty?
 end
@@ -46,10 +48,10 @@ get '/protected' do
 end
 
 post '/login' do
-  user_model = SmartTrack::Model::User.new(CONN)
+  user_model = SmartTrack::Model::User.new(@rom)
   user = user_model.find_by_email(@payload['email'])
   if user && user_model.password_matched(user.password, @payload['password'])
-    user_session_model = SmartTrack::Model::UserSession.new(CONN)
+    user_session_model = SmartTrack::Model::UserSession.new(@rom)
     user_session = user_session_model.find_by_user_id(user.id)
 
     user_session_model.repo.delete(user_session.id) if user_session
