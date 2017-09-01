@@ -8,7 +8,6 @@ module SmartTrack
 end
 
 require_relative 'database/connection'
-require_relative 'database/relation'
 require_relative 'database/repository'
 
 module SmartTrack::Database
