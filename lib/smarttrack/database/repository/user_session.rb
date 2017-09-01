@@ -8,10 +8,20 @@ module SmartTrack::Database::Repository
   end
 
   class UserSessionRepo < ROM::Repository[:user_sessions]
+    relations :users
     commands :create, delete: :by_pk
-
+  
     def query_first(conditions)
-      user_sessions.where(conditions).first
+      user_sessions.index.wrap(:user).where(conditions).first
+    end
+  
+    def find_by_user_id(user_id)
+      query_first(user_id: user_id)
+    end
+  
+    def find_by_token(token)
+      query_first(token: token)
     end
   end
+
 end

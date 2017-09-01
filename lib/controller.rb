@@ -5,6 +5,7 @@ require 'sinatra/json'
 require 'sinatra/namespace'
 require "sinatra/reloader" if development?
 require 'json'
+require 'securerandom'
 
 # puts "env = #{ENV["SINATRA_ENV"]}"
 set :environment, :test if ENV["SINATRA_ENV"] == 'test'
@@ -12,7 +13,6 @@ set :environment, :test if ENV["SINATRA_ENV"] == 'test'
 # puts test?
 
 require_relative 'smarttrack/database'
-require_relative 'smarttrack/model'
 require_relative 'authen/token_auth'
 require_relative 'password'
 
@@ -26,6 +26,8 @@ db_url = "jdbc:mysql://#{settings.db_host}:\
 #{settings.db_name}?user=root&password=root&charset=utf8"
 
 db_connection = SmartTrack::Database::Connection.new(db_url)
+db_connection.rom.gateways[:default].use_logger(Logger.new($stdout)) if development?
+
 SmartTrack::Database::Container.register(:db_connection, db_connection)
 SmartTrack::Database::Container.register(:rom, db_connection.rom)
 SmartTrack::Database::Container.register(:sequel, db_connection.sequel)
@@ -35,6 +37,7 @@ include SmartTrack::TokenAuth
 # Hooks
 before do
   @rom = SmartTrack::Database::Container.resolve(:rom)
+  
   req_body = request.body.read
   @payload = JSON.parse(req_body) unless req_body.empty?
 end
@@ -48,16 +51,16 @@ get '/protected' do
 end
 
 post '/login' do
-  user_model = SmartTrack::Model::User.new(@rom)
-  user = user_model.find_by_email(@payload['email'])
-  if user && user_model.password_matched(user.password, @payload['password'])
-    user_session_model = SmartTrack::Model::UserSession.new(@rom)
-    user_session = user_session_model.find_by_user_id(user.id)
+  user_repo = SmartTrack::Database::Repository::UserRepo.new(@rom)
+  session_repo = SmartTrack::Database::Repository::UserSessionRepo.new(@rom)
+  user = user_repo.find_by_email(@payload['email'])
 
-    user_session_model.repo.delete(user_session.id) if user_session
+  if user && password_matched(user.password, @payload['password'])
+    user_session = session_repo.find_by_user_id(user.id)
+    session_repo.delete(user_session.id) if user_session
     
-    user_session = user_session_model.repo.create(
-      token: user_session_model.generate_session_token,
+    user_session = session_repo.create(
+      token: generate_session_token,
       user_id: user.id,
       expired_at: Time.now + (60*60*24*30))
 
@@ -65,6 +68,15 @@ post '/login' do
   end
 
   [500, json(message: 'Email or password incorrect')]
+end
+
+def generate_session_token
+  SecureRandom.uuid
+end
+
+def password_matched(user_pass_hash, external_password)
+  hash = BCrypt::Password.new(user_pass_hash)
+  return hash == external_password  
 end
 
 # require_relative 'routes/users'

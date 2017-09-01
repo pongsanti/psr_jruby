@@ -22,10 +22,6 @@ module SmartTrack
         path = File.expand_path('lib/smarttrack/database')
         config.auto_registration(path, namespace: 'SmartTrack::Database')
       end
-
-      # def initialize_models
-      #   require_relative 'model'
-      # end
       
       #require_relative 'util'
       #include SmartTrack::Database::Util
