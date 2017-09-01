@@ -1,24 +1,9 @@
-require 'rack/test'
-require 'smarttrack'
-require_relative '../db_helper'
+describe 'Login route' do
+  include_context 'database'
 
-describe 'SmartTrack' do
-  include Rack::Test::Methods
-  include SmartTrack::Test::Helper
-
-  def app
-    Sinatra::Application
-  end
-
-  
-  around(:each) do |example|
-    SmartTrack::Database::Container.resolve(:sequel)
-      .transaction(rollback: :always, auto_savepoint: true) {example.run}
-  end
-
-  email = 'john@gmail.com'
-  password = '1234'
-  request = {email: email, password: password}.to_json
+  let(:email)     { 'john@gmail.com' }
+  let(:password)  { '1234' }
+  let(:request)   { {email: email, password: password}.to_json }
 
   context 'in unauthorized user context' do
     it 'can log user in and return token' do

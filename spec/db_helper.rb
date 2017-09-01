@@ -1,4 +1,5 @@
 require 'bcrypt'
+require 'securerandom'
 
 module SmartTrack::Test
   module Helper
@@ -6,16 +7,22 @@ module SmartTrack::Test
       SmartTrack::Database::Container.resolve(:rom)
     end
 
+    def user_repo
+      SmartTrack::Database::Container.resolve(:user_repo)
+    end
+
+    def session_repo
+      SmartTrack::Database::Container.resolve(:session_repo)
+    end
+
     def create_user(email, password = 'xxx')
-      user_model = SmartTrack::Model::User.new(rom)
       hash = BCrypt::Password.create(password)
-      user = user_model.repo.create(email: email, password: hash)
+      user = user_repo.create(email: email, password: hash)
     end
 
     def create_session(user, session_token)
-      session_model = SmartTrack::Model::UserSession.new(rom)
-      session_model.repo.create(
-        token: session_model.generate_session_token,
+      session_repo.create(
+        token: SecureRandom.uuid,
         user_id: user.id,
         expired_at: Time.now + (60*60*24*30))
     end

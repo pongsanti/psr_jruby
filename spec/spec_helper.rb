@@ -13,13 +13,20 @@
 # it.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'pathname'
+root = Pathname(__FILE__).dirname
 
 module SmartTrack; end
 
 $LOAD_PATH << File.expand_path('lib')
 #puts $LOAD_PATH
 ENV['SINATRA_ENV'] = 'test'
+
 require_relative 'controller_helper'
+# require all shared files
+Dir[root.join('shared/*.rb').to_s].each do |f|
+  require f
+end
 
 RSpec.configure do |config|
   config.include SmartTrack::Test::ControllerHelper
