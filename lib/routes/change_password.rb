@@ -16,7 +16,6 @@ namespace '/api' do
     end
 
     new_password_hash = BCrypt::Password.create(@payload[:new_password])
-    #DB.update_password(@user, new_password)
     changeset = user_repo
       .changeset(@user.id, password: new_password_hash)
       .map(:touch)
