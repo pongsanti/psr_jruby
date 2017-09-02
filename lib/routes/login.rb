@@ -1,10 +1,10 @@
+login_schema = Dry::Validation.Form do
+  required(:email).filled(format?: URI::MailTo::EMAIL_REGEXP)
+  required(:password).filled
+end
+
 post '/login' do
   # validation
-  login_schema = Dry::Validation.Form do
-    required(:email).filled(format?: URI::MailTo::EMAIL_REGEXP)
-    required(:password).filled
-  end
-  
   result = login_schema.call(@payload)
   return [500, json(errors: result.errors)] if result.failure?
 
@@ -28,14 +28,9 @@ post '/login' do
 end
 
 def generate_session_token
-  SecureRandom.uuid
+  @util.generate_session_token
 end
 
 def password_matched(user_pass_hash, external_password)
-  hash = BCrypt::Password.new(user_pass_hash)
-  return hash == external_password  
-end
-
-def email_regex
-
+  @util.password_matched(user_pass_hash, external_password) 
 end

@@ -1,9 +1,8 @@
 post_users_schema = Dry::Validation.Form do
   display_name_min_size = 4
-  password_min_size = 8
 
   required(:email).filled(format?: URI::MailTo::EMAIL_REGEXP)
-  required(:password).filled(min_size?: password_min_size )
+  required(:password).filled(min_size?: SmartTrack::Constant::PASSWORD_MIN_SIZE )
   required(:display_name).filled(min_size?: display_name_min_size)
 end
 

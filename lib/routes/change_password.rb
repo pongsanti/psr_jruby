@@ -1,6 +1,5 @@
 change_password_schema = Dry::Validation.Form do
-  password_min_size = 8
-  required(:new_password).filled(min_size?: password_min_size)
+  required(:new_password).filled(min_size?: SmartTrack::Constant::PASSWORD_MIN_SIZE)
 end
 
 namespace '/api' do
@@ -11,7 +10,7 @@ namespace '/api' do
     result = change_password_schema.call(@payload)
     return [500, json(errors: result.errors)] if result.failure?
 
-    unless password_matched(@user.password, @payload[:old_password])
+    unless @util.password_matched(@user.password, @payload[:old_password])
       raise UnAuthError, 'password incorrect'
     end
 

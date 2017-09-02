@@ -14,6 +14,8 @@ set :environment, :test if ENV["SINATRA_ENV"] == 'test'
 # puts test?
 
 require_relative 'smarttrack/database'
+require_relative 'smarttrack/constant'
+require_relative 'smarttrack/util'
 require_relative 'authen/token_auth'
 require_relative 'password'
 
@@ -32,6 +34,7 @@ def setup(st_container)
   db_connection = SmartTrack::Database::Connection.new(db_url)
   db_connection.rom.gateways[:default].use_logger(Logger.new($stdout)) if development?
 
+  st_container.register(:util, SmartTrack::Util.new)
   st_container.register(:db_connection, db_connection)
   st_container.register(:rom, db_connection.rom)
   st_container.register(:sequel, db_connection.sequel)
@@ -45,6 +48,7 @@ include SmartTrack::TokenAuth
 # Hooks
 before do
   @rom = st_container.resolve(:rom)
+  @util = st_container.resolve(:util)
   @user_repo = st_container.resolve(:user_repo)
   @session_repo = st_container.resolve(:session_repo)
 

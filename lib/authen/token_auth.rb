@@ -27,13 +27,5 @@ module SmartTrack
         raise UnAuthError, "Unauthenticated request"
       end
     end
-
-    def generate_token
-      SecureRandom.uuid
-    end
-
-    def expire_at
-      
-    end
   end
 end
