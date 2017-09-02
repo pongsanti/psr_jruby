@@ -1,7 +1,17 @@
 post '/login' do
-  user = @user_repo.find_by_email(@payload['email'])
+  # validation
+  login_schema = Dry::Validation.Schema do
+    required(:email).filled(format?: URI::MailTo::EMAIL_REGEXP)
+    required(:password).filled
+  end
+  
+  result = login_schema.call(@payload)
+  return [500, json(message: result.errors)] if result.failure?
 
-  if user && password_matched(user.password, @payload['password'])
+  # processing
+  user = @user_repo.find_by_email(@payload[:email])
+
+  if user && password_matched(user.password, @payload[:password])
     user_session = @session_repo.find_by_user_id(user.id)
     @session_repo.delete(user_session.id) if user_session
     
@@ -24,4 +34,8 @@ end
 def password_matched(user_pass_hash, external_password)
   hash = BCrypt::Password.new(user_pass_hash)
   return hash == external_password  
+end
+
+def email_regex
+
 end

@@ -6,6 +6,7 @@ require 'sinatra/namespace'
 require "sinatra/reloader" if development?
 require 'json'
 require 'securerandom'
+require 'dry-validation'
 
 # puts "env = #{ENV["SINATRA_ENV"]}"
 set :environment, :test if ENV["SINATRA_ENV"] == 'test'
@@ -46,7 +47,7 @@ before do
   @session_repo = SmartTrack::Database::Container.resolve(:session_repo)
 
   req_body = request.body.read
-  @payload = JSON.parse(req_body) unless req_body.empty?
+  @payload = JSON.parse(req_body, symbolize_names: true) unless req_body.empty?
 end
 
 # Routes
