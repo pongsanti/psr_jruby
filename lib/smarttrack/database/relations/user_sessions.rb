@@ -7,7 +7,7 @@ module SmartTrack::Database::Relations
     end
 
     def index
-      select(:id, :token)
+      select(:id, :token, :expired_at)
     end
   end
 end

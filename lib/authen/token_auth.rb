@@ -21,11 +21,15 @@ module SmartTrack
       
       user_session = session_repo.find_by_token(token)
       if user_session
-        #@user = user_repo.query_first(id: user_session.user_id)
+        halt 500, {}, json(message: 'session expired') if session_expired?(user_session)
         @user = user_session.user
       else
         raise UnAuthError, "Unauthenticated request"
       end
+    end
+
+    def session_expired? session
+      Time.now >= session.expired_at
     end
   end
 end

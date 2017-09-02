@@ -9,7 +9,7 @@ module SmartTrack::Database::Repository
 
   class UserSessionRepo < ROM::Repository[:user_sessions]
     relations :users
-    commands :create, delete: :by_pk
+    commands :create, update: :by_pk, delete: :by_pk
   
     def query_first(conditions)
       user_sessions.index.wrap(:user).where(conditions).first
