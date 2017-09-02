@@ -11,7 +11,7 @@ module SmartTrack::Database::Repository
   class UserRepo < ROM::Repository[:users]
     relations :user_sessions
 
-    commands :create
+    commands :create, update: :by_pk
     
     def query_first(conditions)
       users.combine(one: {user_session: user_sessions}).map_to(User).where(conditions).first

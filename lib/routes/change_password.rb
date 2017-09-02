@@ -1,21 +1,27 @@
-require_relative '../error/input_error'
+change_password_schema = Dry::Validation.Form do
+  password_min_size = 8
+  required(:new_password).filled(min_size?: password_min_size)
+end
 
 namespace '/api' do
   post '/change_password' do
     authorize? env
 
-    old_password = @payload['old_password']
-    new_password = @payload['new_password']
+    # validation
+    result = change_password_schema.call(@payload)
+    return [500, json(errors: result.errors)] if result.failure?
 
-    unless DB.password_matched(@user, old_password)
+    unless password_matched(@user.password, @payload[:old_password])
       raise UnAuthError, 'password incorrect'
     end
 
-    if new_password.empty?
-      raise SmartTrack::InputError, 'password is empty'
-    end
+    new_password_hash = BCrypt::Password.create(@payload[:new_password])
+    #DB.update_password(@user, new_password)
+    changeset = user_repo
+      .changeset(@user.id, password: new_password_hash)
+      .map(:touch)
+    user_repo.update(@user.id, changeset)
 
-    DB.update_password(@user, new_password)
     [200, json(result: "Password updated")]
   end
 end

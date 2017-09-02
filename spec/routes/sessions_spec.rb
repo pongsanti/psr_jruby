@@ -1,4 +1,4 @@
-describe 'SmartTrack' do
+describe 'Delete sessions' do
   include_context 'database'
 
   let(:email)     { 'john@gmail.com' }

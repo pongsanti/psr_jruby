@@ -1,22 +1,11 @@
-require 'rack/test'
-require 'smarttrack'
-require_relative '../db_helper'
+describe 'Post change password' do
+  include_context 'database'
 
-describe 'SmartTrack' do
-  include Rack::Test::Methods
-  include SmartTrack::Test::Helper
-
-  def app
-    Sinatra::Application
-  end
-
-  around(:each) do |example|
-    DB.db.transaction(rollback: :always, auto_savepoint: true) {example.run}
-  end
-
-  mocktoken = 'mocktoken'
-  json_req = {old_password: 'xxx',
-    new_password: '1234'}.to_json
+  let(:mocktoken) {'mocktoken'}
+  let(:json_req) {
+    {old_password: 'xxx',
+    new_password: '1234_abcd'}.to_json
+  }
 
   context 'in unauthenticated context' do
     it 'cannot change password' do

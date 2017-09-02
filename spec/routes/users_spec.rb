@@ -1,4 +1,4 @@
-describe 'SmartTrack' do
+describe 'Post users' do
   include_context 'database'
 
   let(:mocktoken) {'mocktoken'}

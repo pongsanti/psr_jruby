@@ -63,7 +63,7 @@ end
 require_relative 'routes/login'
 require_relative 'routes/users'
 require_relative 'routes/sessions'
-# require_relative 'routes/change_password'
+require_relative 'routes/change_password'
 
 # Error handling
 error do
