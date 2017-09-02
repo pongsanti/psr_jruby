@@ -20,9 +20,9 @@ module SmartTrack::Test
       user = user_repo.create(email: email, password: hash)
     end
 
-    def create_session(user, session_token)
+    def create_session(user, session_token = SecureRandom.uuid)
       session_repo.create(
-        token: SecureRandom.uuid,
+        token: session_token,
         user_id: user.id,
         expired_at: Time.now + (60*60*24*30))
     end
