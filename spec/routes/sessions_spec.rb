@@ -1,29 +1,21 @@
-require 'rack/test'
-require 'smarttrack'
-require_relative '../db_helper'
-
 describe 'SmartTrack' do
-  include Rack::Test::Methods
-  include SmartTrack::Test::Helper
+  include_context 'database'
 
-  def app
-    Sinatra::Application
-  end
-
-  around(:each) do |example|
-    DB.db.transaction(rollback: :always, auto_savepoint: true) {example.run}
-  end
+  let(:email)     { 'john@gmail.com' }
+  let(:password)  { '1234' }
+  let(:request)   { {email: email, password: password}.to_json }
 
   context 'in authenticated context' do
     it 'can delete session' do
       token = 'mocktoken'
-      create_user_session 'john@gmail.com', token
+      # prepare
+      create_user_session(email, token)
       
       header 'X-Authorization', token
       delete '/api/sessions'
 
       expect(last_response.status).to eq(200)
-      expect(DB.find_user_session(token)).to be_nil
+      expect(session_repo.find_by_token(token)).to be_nil
     end
   end
   

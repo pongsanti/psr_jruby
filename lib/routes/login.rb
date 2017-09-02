@@ -6,7 +6,7 @@ post '/login' do
   end
   
   result = login_schema.call(@payload)
-  return [500, json(message: result.errors)] if result.failure?
+  return [500, json(errors: result.errors)] if result.failure?
 
   # processing
   user = @user_repo.find_by_email(@payload[:email])

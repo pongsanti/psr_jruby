@@ -17,12 +17,14 @@ require_relative 'smarttrack/database'
 require_relative 'authen/token_auth'
 require_relative 'password'
 
+st_container = SmartTrack::Database::Container
+
 enable :logging
 disable :show_exceptions
 config_file File.expand_path('config/sinatra.yml')
 
 # setup database, container
-def setup
+def setup(st_container)
   db_url = "jdbc:mysql://#{settings.db_host}:\
 #{settings.db_port}/\
 #{settings.db_name}?user=root&password=root&charset=utf8"
@@ -30,21 +32,21 @@ def setup
   db_connection = SmartTrack::Database::Connection.new(db_url)
   db_connection.rom.gateways[:default].use_logger(Logger.new($stdout)) if development?
 
-  SmartTrack::Database::Container.register(:db_connection, db_connection)
-  SmartTrack::Database::Container.register(:rom, db_connection.rom)
-  SmartTrack::Database::Container.register(:sequel, db_connection.sequel)
-  SmartTrack::Database::Container.register(:user_repo, SmartTrack::Database::Repository::UserRepo.new(db_connection.rom))
-  SmartTrack::Database::Container.register(:session_repo, SmartTrack::Database::Repository::UserSessionRepo.new(db_connection.rom))
+  st_container.register(:db_connection, db_connection)
+  st_container.register(:rom, db_connection.rom)
+  st_container.register(:sequel, db_connection.sequel)
+  st_container.register(:user_repo, SmartTrack::Database::Repository::UserRepo.new(db_connection.rom))
+  st_container.register(:session_repo, SmartTrack::Database::Repository::UserSessionRepo.new(db_connection.rom))
 end
-setup
+setup(st_container)
 
 include SmartTrack::TokenAuth
 
 # Hooks
 before do
-  @rom = SmartTrack::Database::Container.resolve(:rom)
-  @user_repo = SmartTrack::Database::Container.resolve(:user_repo)
-  @session_repo = SmartTrack::Database::Container.resolve(:session_repo)
+  @rom = st_container.resolve(:rom)
+  @user_repo = st_container.resolve(:user_repo)
+  @session_repo = st_container.resolve(:session_repo)
 
   req_body = request.body.read
   @payload = JSON.parse(req_body, symbolize_names: true) unless req_body.empty?
@@ -59,8 +61,8 @@ get '/protected' do
 end
 
 require_relative 'routes/login'
-# require_relative 'routes/users'
-# require_relative 'routes/sessions'
+require_relative 'routes/users'
+require_relative 'routes/sessions'
 # require_relative 'routes/change_password'
 
 # Error handling

@@ -5,6 +5,32 @@ describe 'Login route' do
   let(:password)  { '1234' }
   let(:request)   { {email: email, password: password}.to_json }
 
+  context 'for all context' do
+    it 'requires email' do
+      post_with_json '/login', {password: 'pass'}.to_json
+
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('errors', 'email')
+      expect(last_response.body).not_to include('password')
+    end
+
+    it 'requires email with correct format' do
+      post_with_json '/login', {email: 'invalid_email', password: 'pass'}.to_json
+
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('errors', 'email')
+      expect(last_response.body).not_to include('password')
+    end
+
+    it 'requires password' do
+      post_with_json '/login', {email: 'john@email.com'}.to_json
+
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('errors', 'password')
+      expect(last_response.body).not_to include('email')
+    end       
+  end
+
   context 'in unauthorized user context' do
     it 'can log user in and return token' do
       # prepare
