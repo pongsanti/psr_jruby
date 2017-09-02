@@ -1,6 +1,6 @@
 post '/login' do
   # validation
-  login_schema = Dry::Validation.Schema do
+  login_schema = Dry::Validation.Form do
     required(:email).filled(format?: URI::MailTo::EMAIL_REGEXP)
     required(:password).filled
   end
