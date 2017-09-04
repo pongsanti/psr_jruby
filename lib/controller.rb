@@ -47,6 +47,14 @@ include SmartTrack::TokenAuth
 
 # Hooks
 before do
+  # CORS
+  if request.request_method == 'OPTIONS'
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "POST"
+
+    halt 200
+  end
+
   @rom = st_container.resolve(:rom)
   @util = st_container.resolve(:util)
   @user_repo = st_container.resolve(:user_repo)
