@@ -47,21 +47,26 @@ include SmartTrack::TokenAuth
 
 # Hooks
 before do
-  # CORS
-  if request.request_method == 'OPTIONS'
-    response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "POST"
-
-    halt 200
-  end
-
   @rom = st_container.resolve(:rom)
   @util = st_container.resolve(:util)
   @user_repo = st_container.resolve(:user_repo)
   @session_repo = st_container.resolve(:session_repo)
 
   req_body = request.body.read
-  @payload = JSON.parse(req_body, symbolize_names: true) unless req_body.empty?
+  @payload = req_body.empty? ? {} : JSON.parse(req_body, symbolize_names: true)
+end
+
+after do
+  # CORS
+  unless request.request_method == 'OPTIONS'
+    headers SmartTrack::Constant::CORS_HASH
+  end
+end
+
+# CORS
+options "*" do
+  headers SmartTrack::Constant::CORS_HASH
+  200
 end
 
 # Routes
