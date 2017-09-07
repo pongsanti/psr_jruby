@@ -21,7 +21,9 @@ namespace '/api' do
     return [500, json(errors: result.errors)] if result.failure?    
 
     users = @user_repo.active_users(size, page)
-    [200, json(users)]
+    pager = @rom.relations[:users].per_page(size).page(page).pager
+
+    [200, json(users: users, pager: pager_to_hash(pager))]
   end
 
   post '/users' do
@@ -45,4 +47,13 @@ namespace '/api' do
     #[201, json(result: user.to_h)]
     [201, json(message: 'OK')]
   end
+end
+
+def pager_to_hash(pager)
+  hash = {}
+  methods = [:next_page, :prev_page, :total, :total_pages]
+  methods.each do |m|
+    hash[m] = pager.send(m)
+  end
+  hash
 end
