@@ -6,7 +6,24 @@ post_users_schema = Dry::Validation.Form do
   required(:display_name).filled(min_size?: display_name_min_size)
 end
 
+get_users_schema = Dry::Validation.Form do
+  required(:page).maybe(:int?)
+  required(:size).maybe(:int?)
+end
+
 namespace '/api' do
+  get '/users' do
+    authorize? env
+
+    page = params['page'] || 1
+    size = params['size'] || 10
+    result = get_users_schema.call(page: page, size: size)
+    return [500, json(errors: result.errors)] if result.failure?    
+
+    users = @user_repo.active_users(size, page)
+    [200, json(users)]
+  end
+
   post '/users' do
     authorize? env
 

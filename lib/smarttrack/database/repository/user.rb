@@ -9,6 +9,15 @@ module SmartTrack::Database::Repository
       @password = attributes[:password]
       @user_session = attributes[:user_session]
     end
+    
+    def to_json(options={})
+      hash = {
+        id: id,
+        email: email,
+        display_name: display_name
+      }
+      hash.to_json
+    end
   end
 
   class UserRepo < ROM::Repository[:users]
@@ -22,6 +31,10 @@ module SmartTrack::Database::Repository
 
     def find_by_email(email)
       query_first(email: email)
+    end
+
+    def active_users(per_page, page)
+      users.where(deleted_at: nil).per_page(per_page).page(page).map_to(User).to_a
     end
 
   end
