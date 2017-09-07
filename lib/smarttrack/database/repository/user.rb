@@ -1,10 +1,13 @@
 module SmartTrack::Database::Repository
   class User
-    attr_reader :id, :email, :password, :user_session
+    attr_reader :id, :email, :display_name, :password, :user_session
   
     def initialize(attributes)
-      @id, @email, @password, @user_session = attributes.values_at(
-        :id, :email, :password, :user_session)
+      @id = attributes[:id]
+      @email = attributes[:email]
+      @display_name = attributes[:display_name]
+      @password = attributes[:password]
+      @user_session = attributes[:user_session]
     end
   end
 

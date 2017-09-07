@@ -40,6 +40,7 @@ describe 'Login route' do
       
       expect(last_response.status).to eq(200)
       expect(last_response.body).to include('token')
+      expect(last_response.body).to include('user')
     end
   end
 
@@ -54,6 +55,7 @@ describe 'Login route' do
 
       expect(last_response.status).to eq(200)
       expect(last_response.body).to include('token')
+      expect(last_response.body).to include('user')
       new_token_return? token
     end
 

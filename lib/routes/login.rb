@@ -21,7 +21,9 @@ post '/login' do
       expired_at: Time.now + SmartTrack::Constant::ONE_MONTH_IN_MS).map(:add_timestamps)
     user_session = @user_repo.create(changeset)
 
-    return [200, json(token: user_session.token)]
+    return [200, json(token: user_session.token,
+      user: { display_name: user.display_name, email: user.email })
+    ]
   end
 
   [500, json(message: 'Email or password incorrect')]
