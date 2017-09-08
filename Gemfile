@@ -14,7 +14,12 @@ gem 'dry-validation'
 gem 'bcrypt'
 gem 'json'
 
-platform :jruby do
+platforms :ruby do
+  gem 'mysql2'
+  gem 'thin'
+end
+
+platforms :jruby do
   gem 'trinidad', '~>1.5.0.B2'
 end
 
