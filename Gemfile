@@ -13,7 +13,10 @@ gem 'sinatra-contrib'
 gem 'dry-validation'
 gem 'bcrypt'
 gem 'json'
-gem 'trinidad', '~>1.5.0.B2'
+
+platform :jruby do
+  gem 'trinidad', '~>1.5.0.B2'
+end
 
 group :test do
   gem 'rspec'
