@@ -17,6 +17,7 @@ module SmartTrack
         String :display_name
         DateTime :created_at
         DateTime :updated_at
+        DateTime :deleted_at
       end
 
       conf.default.create_table(:user_sessions) do
