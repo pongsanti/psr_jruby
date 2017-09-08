@@ -5,7 +5,7 @@ module SmartTrack
     HOST = 'localhost'
     PORT = '3306'
     DATABASE_NAME = ENV["SINATRA_ENV"] == 'test' ? 'sts_test' : 'sts'
-    DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
+    DB_URL = "mysql2://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
 
     @rom = ROM.container(:sql, DB_URL) do |conf|
       conf.default.drop_table(:user_sessions, :users)
