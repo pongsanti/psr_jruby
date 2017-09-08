@@ -78,7 +78,7 @@ get '/protected' do
 end
 
 require_relative 'routes/login'
-require_relative 'routes/users'
+require_relative 'routes/user'
 require_relative 'routes/sessions'
 require_relative 'routes/change_password'
 
