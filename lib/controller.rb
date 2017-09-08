@@ -27,7 +27,7 @@ config_file File.expand_path('config/sinatra.yml')
 
 # setup database, container
 def setup(st_container)
-  db_url = "jdbc:mysql://#{settings.db_host}:\
+  db_url = "mysql2://#{settings.db_host}:\
 #{settings.db_port}/\
 #{settings.db_name}?user=root&password=root&charset=utf8"
       

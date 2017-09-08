@@ -13,7 +13,15 @@ gem 'sinatra-contrib'
 gem 'dry-validation'
 gem 'bcrypt'
 gem 'json'
-gem 'trinidad', '~>1.5.0.B2'
+
+platforms :ruby do
+  gem 'mysql2'
+  gem 'thin'
+end
+
+platforms :jruby do
+  gem 'trinidad', '~>1.5.0.B2'
+end
 
 group :test do
   gem 'rspec'
