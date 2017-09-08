@@ -8,7 +8,7 @@ namespace '/api' do
     authorize? env
 
     page = params['page'] || 1
-    size = params['size'] || 10
+    size = params['size'] || SmartTrack::Constant::PAGE_SIZE
     result = get_users_schema.call(page: page, size: size)
     return [500, json(errors: result.errors)] if result.failure?    
 
