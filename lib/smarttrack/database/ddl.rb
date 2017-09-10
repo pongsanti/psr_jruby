@@ -1,14 +1,19 @@
 require 'rom'
+require 'bcrypt'
 
 module SmartTrack
   module Database
     HOST = 'localhost'
     PORT = '3306'
-    DATABASE_NAME = ENV["SINATRA_ENV"] == 'test' ? 'sts_test' : 'sts'
+    DATABASE_NAME = ENV["SINATRA_ENV"] == 'test' ? 'smarttrack_test' : 'smarttrack'
     DB_URL = "mysql2://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
 
     @rom = ROM.container(:sql, DB_URL) do |conf|
-      conf.default.drop_table(:user_sessions, :users)
+      begin
+        conf.default.drop_table(:user_sessions, :users)
+      rescue
+        # do nothing
+      end
 
       conf.default.create_table(:users) do
         primary_key :id
@@ -29,8 +34,11 @@ module SmartTrack
         DateTime :updated_at        
       end
 
-      conf.default.connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',
-        'patima.key@gmail.com', '$2a$10$EiouwUDIvB4ygT5hK2NAG.dAcZuYnETMBKHgbae44oP11unaAjZnS', 'Patima'].insert
+      connection = conf.default.connection
+      connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',
+        'ruchira@pongsiri.co.th', BCrypt::Password.create('1a2b3c4d5e'), 'Ruchira T.'].insert
+      connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',
+        'popsicle@gmail.com', BCrypt::Password.create('1234'), 'Popsicle'].insert        
     end
   end
 end
