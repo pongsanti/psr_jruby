@@ -6,8 +6,16 @@ db_host:
 db_port:
   development: 3306
   test: 3306
-  production: 3306  
+  production: 3306
 db_name:
   development: smarttrack
   test: smarttrack_test
   production: smarttrack
+db_user:
+  development: root
+  test: root
+  production: root
+db_pass:
+  development: root
+  test: root
+  production: root

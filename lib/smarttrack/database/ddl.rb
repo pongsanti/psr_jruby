@@ -6,7 +6,9 @@ module SmartTrack
     HOST = 'localhost'
     PORT = '3306'
     DATABASE_NAME = ENV["SINATRA_ENV"] == 'test' ? 'smarttrack_test' : 'smarttrack'
-    DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=root&password=root&charset=utf8"
+    USER = 'root'
+    PASS = 'root'
+    DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=#{USER}&password=#{PASS}&charset=utf8"
 
     @rom = ROM.container(:sql, DB_URL) do |conf|
       begin
