@@ -29,7 +29,7 @@ config_file File.expand_path('config/sinatra.yml')
 def setup(st_container)
   db_url = "mysql2://#{settings.db_host}:\
 #{settings.db_port}/\
-#{settings.db_name}?user=root&password=root&charset=utf8"
+#{settings.db_name}?user=#{settings.db_user}&password=#{settings.db_pass}&charset=utf8"
       
   db_connection = SmartTrack::Database::Connection.new(db_url)
   db_connection.rom.gateways[:default].use_logger(Logger.new($stdout)) if development?
