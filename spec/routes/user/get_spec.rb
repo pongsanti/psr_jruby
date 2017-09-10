@@ -45,7 +45,8 @@ describe 'Get users' do
 
       expect(last_response.status).to eq(200)
       expect(last_response.body).to include('users',
-        'pager', 'next_page', 'prev_page', 'total', 'total_pages')
+        'pager', 'next_page', 'prev_page', 'total', 'total_pages',
+        'current_page', 'limit_value')
     end
   end
   

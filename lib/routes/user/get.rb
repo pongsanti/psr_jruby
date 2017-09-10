@@ -21,7 +21,7 @@ end
 
 def pager_to_hash(pager)
   hash = {}
-  methods = [:next_page, :prev_page, :total, :total_pages]
+  methods = [:current_page, :limit_value, :next_page, :prev_page, :total, :total_pages]
   methods.each do |m|
     hash[m] = pager.send(m)
   end
