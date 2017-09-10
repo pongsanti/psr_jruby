@@ -8,6 +8,6 @@ db_port:
   test: 3306
   production: 3306  
 db_name:
-  development: sts
-  test: sts_test
-  production: sts
+  development: smarttrack
+  test: smarttrack_test
+  production: smarttrack
