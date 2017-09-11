@@ -20,6 +20,11 @@ module SmartTrack::Test
       user = user_repo.create(email: email, password: hash)
     end
 
+    def create_admin_user(email, password = 'xxx')
+      hash = BCrypt::Password.create(password)
+      user = user_repo.create(email: email, password: hash, admin: true)
+    end
+
     def create_session(user, session_token = SecureRandom.uuid)
       session_repo.create(
         token: session_token,
@@ -29,6 +34,11 @@ module SmartTrack::Test
 
     def create_user_session(email, session_token)
       user = create_user(email)
+      create_session(user, session_token)
+    end
+
+    def create_admin_user_session(email, session_token)
+      user = create_admin_user(email)
       create_session(user, session_token)
     end
   end

@@ -1,12 +1,14 @@
 module SmartTrack::Database::Repository
   class User
-    attr_reader :id, :email, :display_name, :password, :user_session
+    attr_reader :id, :email, :display_name, :password, :admin,
+      :user_session
   
     def initialize(attributes)
       @id = attributes[:id]
       @email = attributes[:email]
       @display_name = attributes[:display_name]
       @password = attributes[:password]
+      @admin = attributes[:admin]
       @user_session = attributes[:user_session]
     end
     
@@ -14,7 +16,8 @@ module SmartTrack::Database::Repository
       hash = {
         id: id,
         email: email,
-        display_name: display_name
+        display_name: display_name,
+        admin: admin
       }
       hash.to_json
     end

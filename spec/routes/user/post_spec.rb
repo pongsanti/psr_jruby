@@ -19,9 +19,23 @@ describe 'Post users' do
     end
   end
 
-  context 'in authenticated context' do
+  context 'in authenticated non-admin context' do
+    before (:each) do
+      create_user_session('normal_user@gmail.com', mocktoken)
+      header 'X-Authorization', mocktoken
+    end
+
+    it 'cannot creates user' do
+      post_with_json '/api/users', json_req
+
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('not authorized')
+    end
+  end
+
+  context 'in authenticated admin context' do
     before(:each) do
-      create_user_session('admin@gmail.com', mocktoken)
+      create_admin_user_session('admin@gmail.com', mocktoken)
       header 'X-Authorization', mocktoken
     end
 
@@ -53,12 +67,29 @@ describe 'Post users' do
       expect(last_response.body).to include('errors', 'password', 'size', 'less than')
     end
 
+    it 'rejects if admin is not boolean' do
+      post_with_json url, req_obj.merge(admin: 'xxx').to_json
+      
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('errors', 'admin', 'boolean')
+    end
+
     it 'can creates new user' do
       post_with_json url, json_req
 
       expect(last_response.status).to eq(201)
       expect(last_response.body).to include('OK')
     end
+
+    it 'can creates new admin user' do
+      post_with_json url, req_obj.merge(admin: 'true').to_json
+
+      expect(last_response.status).to eq(201)
+      expect(last_response.body).to include('OK')
+
+      user = user_repo.find_by_email(req_obj[:email])
+      expect(user.admin).to be_truthy
+    end    
   end
   
 end
