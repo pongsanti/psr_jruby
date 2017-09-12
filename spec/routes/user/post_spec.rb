@@ -82,7 +82,7 @@ describe 'Post users' do
     end
 
     it 'can creates new admin user' do
-      post_with_json url, req_obj.merge(admin: 'true').to_json
+      post_with_json url, req_obj.merge(admin: true).to_json
 
       expect(last_response.status).to eq(201)
       expect(last_response.body).to include('OK')

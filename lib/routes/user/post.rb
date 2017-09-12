@@ -19,19 +19,16 @@ namespace '/api' do
       return [500, json(message: 'User already existed')]
     end
 
+    admin_flag = @payload[:admin] || false
     # create user
     changeset = @user_repo.changeset(
       display_name: @payload[:display_name],
       email: @payload[:email],
       password: create_password(@payload[:password]),
-      admin: str_to_bool(@payload[:admin])).map(:add_timestamps)
+      admin: admin_flag).map(:add_timestamps)
     user = @user_repo.create(changeset)
     
     #[201, json(result: user.to_h)]
     [201, json(message: 'OK')]
   end
-end
-
-def str_to_bool str
-  str == 'true' || str == 't'
 end
