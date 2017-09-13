@@ -36,8 +36,16 @@ module SmartTrack::Database::Repository
       query_first(email: email)
     end
 
-    def active_users(per_page, page)
-      users.where(deleted_at: nil).per_page(per_page).page(page).map_to(User).to_a
+    def active_users(per_page, page, order_col, direction = :asc)
+      order_col = order_col.to_sym
+
+      rel = users.where(deleted_at: nil).per_page(per_page).page(page)
+      if (direction.to_sym == :asc)
+        rel = rel.order(order_col)
+      else
+        rel = rel.order(order_col).reverse
+      end
+      return rel.map_to(User).to_a
     end
 
   end
