@@ -1,6 +1,7 @@
 module SmartTrack::Database::Repository
   class User
     attr_reader :id, :email, :display_name, :password, :admin,
+      :created_at,
       :user_session
   
     def initialize(attributes)
@@ -9,7 +10,12 @@ module SmartTrack::Database::Repository
       @display_name = attributes[:display_name]
       @password = attributes[:password]
       @admin = attributes[:admin]
+      @created_at = attributes[:created_at]
       @user_session = attributes[:user_session]
+    end
+
+    def created_at
+      @created_at.strftime('%F %T') if @created_at
     end
     
     def to_json(options={})
@@ -17,6 +23,7 @@ module SmartTrack::Database::Repository
         id: id,
         email: email,
         display_name: display_name,
+        created_at: created_at,
         admin: admin
       }
       hash.to_json
