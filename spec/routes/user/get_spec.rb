@@ -28,6 +28,16 @@ describe 'Get users' do
       expect(last_response.status).to eq(200)
     end
 
+    it 'receives order param' do
+      get '/api/users?order=email'
+      expect(last_response.status).to eq(200)
+    end
+
+    it 'receives direction param' do
+      get '/api/users?direction=desc'
+      expect(last_response.status).to eq(200)
+    end
+
     it 'rejects if page param is not integer' do
       get '/api/users?page=a'
       expect(last_response.status).to eq(500)
@@ -36,6 +46,12 @@ describe 'Get users' do
 
     it 'rejects if size param is not integer' do
       get '/api/users?size=a'
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('errors')
+    end
+
+    it 'rejects if direction param is invalid' do
+      get '/api/users?direction=xxx'
       expect(last_response.status).to eq(500)
       expect(last_response.body).to include('errors')
     end
