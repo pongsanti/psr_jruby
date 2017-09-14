@@ -36,11 +36,15 @@ module SmartTrack::Database::Repository
     commands :create, update: :by_pk
     
     def query_first(conditions)
-      users.combine(one: {user_session: user_sessions}).map_to(User).where(conditions).first
+      users.combine(one: {user_session: user_sessions}).map_to(User).where(conditions).one
     end
 
     def find_by_email(email)
       query_first(email: email)
+    end
+
+    def active_user(id)
+      users.map_to(User).where(id: id, deleted_at: nil).one
     end
 
     def active_users(per_page, page, order_col, direction = :asc)
