@@ -12,9 +12,23 @@ describe 'Get users' do
     end
   end
 
-  context 'in authenticated context' do
+  context 'in authenticated non-admin context' do
+    before (:each) do
+      create_user_session('normal_user@gmail.com', mocktoken)
+      header 'X-Authorization', mocktoken
+    end
+
+    it 'cannot get users list' do
+      get '/api/users'
+
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('not authorized')
+    end
+  end
+
+  context 'in authenticated admin context' do
     before(:each) do
-      create_user_session('admin@gmail.com', mocktoken)
+      create_admin_user_session('admin@gmail.com', mocktoken)
       header 'X-Authorization', mocktoken
     end
 

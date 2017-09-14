@@ -7,7 +7,7 @@ end
 
 namespace '/api' do
   get '/users' do
-    authorize? env
+    authorize_admin? env
 
     page = params['page'] || 1
     size = params['size'] || SmartTrack::Constant::PAGE_SIZE
