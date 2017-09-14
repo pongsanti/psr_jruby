@@ -55,7 +55,7 @@ describe 'Delete user' do
     it 'can delete user' do
       delete url
 
-      expect(last_response.status).to eq(204)
+      expect(last_response.status).to eq(200)
       expect(user_repo.active_user(1)).to be_nil
     end    
   end

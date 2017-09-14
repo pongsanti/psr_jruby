@@ -11,12 +11,12 @@ namespace '/api' do
     return [500, json(errors: result.errors)] if result.failure?
 
     user = @user_repo.active_user(id)
-    return [500,json(message: 'User not existed')] unless user
+    return [500, json(message: 'User not existed')] unless user
 
     changeset = @user_repo.changeset(user.id, deleted_at: DateTime.now)
       .map(:touch)
     @user_repo.update(user.id, changeset)
 
-    [204]
+    [200, json(message: 'OK')]
   end
 end
