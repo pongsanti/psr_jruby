@@ -39,8 +39,7 @@ describe 'Login route' do
       post_with_json '/login', request
       
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('token')
-      expect(last_response.body).to include('user')
+      expect(last_response.body).to include('token', 'user', 'admin')
     end
   end
 
@@ -54,8 +53,7 @@ describe 'Login route' do
       post_with_json '/login', request
 
       expect(last_response.status).to eq(200)
-      expect(last_response.body).to include('token')
-      expect(last_response.body).to include('user')
+      expect(last_response.body).to include('token', 'user', 'admin')
       new_token_return? token
     end
 

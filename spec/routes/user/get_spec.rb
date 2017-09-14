@@ -12,9 +12,23 @@ describe 'Get users' do
     end
   end
 
-  context 'in authenticated context' do
+  context 'in authenticated non-admin context' do
+    before (:each) do
+      create_user_session('normal_user@gmail.com', mocktoken)
+      header 'X-Authorization', mocktoken
+    end
+
+    it 'cannot get users list' do
+      get '/api/users'
+
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('not authorized')
+    end
+  end
+
+  context 'in authenticated admin context' do
     before(:each) do
-      create_user_session('admin@gmail.com', mocktoken)
+      create_admin_user_session('admin@gmail.com', mocktoken)
       header 'X-Authorization', mocktoken
     end
 
@@ -28,6 +42,16 @@ describe 'Get users' do
       expect(last_response.status).to eq(200)
     end
 
+    it 'receives order param' do
+      get '/api/users?order=email'
+      expect(last_response.status).to eq(200)
+    end
+
+    it 'receives direction param' do
+      get '/api/users?direction=desc'
+      expect(last_response.status).to eq(200)
+    end
+
     it 'rejects if page param is not integer' do
       get '/api/users?page=a'
       expect(last_response.status).to eq(500)
@@ -36,6 +60,18 @@ describe 'Get users' do
 
     it 'rejects if size param is not integer' do
       get '/api/users?size=a'
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('errors')
+    end
+
+    it 'rejects if order param are digits' do
+      get '/api/users?order=123'
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('errors')
+    end
+
+    it 'rejects if direction param is invalid' do
+      get '/api/users?direction=xxx'
       expect(last_response.status).to eq(500)
       expect(last_response.body).to include('errors')
     end

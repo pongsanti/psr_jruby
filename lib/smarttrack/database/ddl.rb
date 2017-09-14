@@ -22,6 +22,7 @@ module SmartTrack
         String :email, null: false, unique: true
         String :password, null: false
         String :display_name
+        TrueClass :admin, null: false, default: false
         DateTime :created_at
         DateTime :updated_at
         DateTime :deleted_at
@@ -39,8 +40,8 @@ module SmartTrack
       connection = conf.default.connection
       connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',
         'ruchira@pongsiri.co.th', BCrypt::Password.create('1a2b3c4d5e'), 'Ruchira T.'].insert
-      connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',
-        'popsicle@gmail.com', BCrypt::Password.create('1234'), 'Popsicle'].insert        
+      connection['INSERT INTO users (email, password, display_name, admin) VALUES (?, ?, ?, ?)',
+        'popsicle@gmail.com', BCrypt::Password.create('1234'), 'Popsicle', true].insert        
     end
   end
 end

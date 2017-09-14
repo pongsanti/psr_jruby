@@ -28,6 +28,13 @@ module SmartTrack
       end
     end
 
+    def authorize_admin? env
+      authorize? env
+      unless @user.admin
+        halt 500, {}, json(message: 'user not authorized')
+      end
+    end
+
     def session_expired? session
       Time.now >= session.expired_at
     end
