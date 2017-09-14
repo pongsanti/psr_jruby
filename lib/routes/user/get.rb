@@ -1,7 +1,7 @@
 get_users_schema = Dry::Validation.Form do
   required(:page).maybe(:int?)
   required(:size).maybe(:int?)
-  required(:order).maybe(:str?)
+  required(:order).maybe(format?: /^\D*$/)
   required(:direction).maybe(:str?, included_in?: ['asc', 'desc'])
 end
 

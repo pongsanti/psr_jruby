@@ -50,6 +50,12 @@ describe 'Get users' do
       expect(last_response.body).to include('errors')
     end
 
+    it 'rejects if order param are digits' do
+      get '/api/users?order=123'
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('errors')
+    end
+
     it 'rejects if direction param is invalid' do
       get '/api/users?direction=xxx'
       expect(last_response.status).to eq(500)
