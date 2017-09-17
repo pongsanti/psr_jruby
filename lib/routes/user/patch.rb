@@ -15,19 +15,18 @@ namespace '/api' do
     # validation
     result = patch_users_schema.call(@payload.merge({id: id}))
     return [500, json(errors: result.errors)] if result.failure?    
+    # get user
+    user = @user_repo.active_user(id)
+    return [500, json(message: 'User not existed')] unless user
 
     changeset_hash = {}
     email = @payload[:email]
-    if email
-      if @user_repo.find_by_email(@payload[:email])
+    if email && user.email != email # new email's been sent to update
+      if @user_repo.find_by_email(email)
         return [500, json(message: 'Email already existed')]
       end
       changeset_hash[:email] = email
     end
-
-    # get user
-    user = @user_repo.active_user(id)
-    return [500, json(message: 'User not existed')] unless user
 
     changeset_hash[:display_name] = @payload[:display_name] if @payload[:display_name]
     changeset_hash[:admin] = @payload[:admin] || false
