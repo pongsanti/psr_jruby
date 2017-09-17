@@ -1,4 +1,5 @@
 change_password_schema = Dry::Validation.Form do
+  required(:old_password).filled
   required(:new_password).filled(min_size?: SmartTrack::Constant::PASSWORD_MIN_SIZE)
 end
 
@@ -11,7 +12,7 @@ namespace '/api' do
     return [500, json(errors: result.errors)] if result.failure?
 
     unless @util.password_matched(@user.password, @payload[:old_password])
-      raise UnAuthError, 'password incorrect'
+      return [500, json(message: 'password incorrect')]
     end
 
     new_password_hash = BCrypt::Password.create(@payload[:new_password])
