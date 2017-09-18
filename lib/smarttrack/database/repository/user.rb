@@ -51,16 +51,28 @@ module SmartTrack::Database::Repository
       users.map_to(User).active.by_pk(id).one
     end
 
-    def active_users(per_page, page, order_col, direction = :asc)
+    def active_users_dataset(per_page, page, order_col, direction = :asc, search_hash = nil)
       order_col = order_col.to_sym
 
-      rel = users.active.per_page(per_page).page(page)
+      rel = users.active
+
+      # searching
+      if search_hash
+        search_hash.each do |key, value|
+          rel = rel.like(key, value)
+        end
+      end
+
+      # pagination
+      rel = rel.per_page(per_page).page(page)
+      
+      # ordering
       if (direction.to_sym == :asc)
         rel = rel.order(order_col)
       else
         rel = rel.order(order_col).reverse
       end
-      return rel.map_to(User).to_a
+      return rel.map_to(User)
     end
 
   end
