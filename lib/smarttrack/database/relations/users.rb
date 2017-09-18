@@ -7,5 +7,13 @@ module SmartTrack::Database::Relations
         has_one :user_session
       end
     end
+
+    def like(col, text)
+      where(Sequel.like(col, "%#{text}%"))
+    end
+
+    def active
+      where(deleted_at: nil)
+    end
   end
 end
