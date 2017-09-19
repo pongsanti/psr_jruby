@@ -9,15 +9,19 @@ module SmartTrack
     USER = 'root'
     PASS = 'root'
     DB_URL = "mysql2://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=#{USER}&password=#{PASS}&charset=utf8"
+    TH_TRACKING_DB_NAME = 'gps_test'
 
     @rom = ROM.container(:sql, DB_URL) do |conf|
+      conf.default.use_logger(Logger.new($stdout))
+      
       begin
-        conf.default.drop_table(:user_sessions, :users)
+        conf.default.drop_table(
+          :user_sessions, :users, :user_station)
       rescue
         # do nothing
       end
 
-      conf.default.create_table(:users) do
+      conf.default.create_table(:users, engine: 'MyISAM', charset: 'tis620') do
         primary_key :id
         String :email, null: false, unique: true
         String :password, null: false
@@ -28,13 +32,19 @@ module SmartTrack
         DateTime :deleted_at
       end
 
-      conf.default.create_table(:user_sessions) do
+      conf.default.create_table(:user_sessions, engine: 'MyISAM', charset: 'tis620') do
         primary_key :id
         foreign_key :user_id, :users
         String :token, null: false
         DateTime :expired_at, null: false
         DateTime :created_at
         DateTime :updated_at        
+      end
+
+      conf.default.create_table(:user_station, engine: 'MyISAM', charset: 'tis620') do
+        foreign_key :user_id, :users
+        foreign_key :station_id, Sequel.qualify(TH_TRACKING_DB_NAME, 'tblstation'), key: 'stationid'
+        primary_key [:user_id, :station_id]
       end
 
       connection = conf.default.connection
