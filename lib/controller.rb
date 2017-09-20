@@ -41,6 +41,7 @@ def setup(st_container)
   st_container.register(:user_repo, SmartTrack::Database::Repository::UserRepo.new(db_connection.rom))
   st_container.register(:session_repo, SmartTrack::Database::Repository::UserSessionRepo.new(db_connection.rom))
   st_container.register(:station_repo, SmartTrack::Database::Repository::StationRepo.new(db_connection.rom))
+  st_container.register(:user_station_repo, SmartTrack::Database::Repository::UserStationRepo.new(db_connection.rom))
 end
 setup(st_container)
 
@@ -53,6 +54,7 @@ before do
   @user_repo = st_container.resolve(:user_repo)
   @session_repo = st_container.resolve(:session_repo)
   @station_repo = st_container.resolve(:station_repo)
+  @user_station_repo = st_container.resolve(:user_station_repo)
 
   req_body = request.body.read
   @payload = req_body.empty? ? {} : JSON.parse(req_body, symbolize_names: true)
@@ -84,6 +86,7 @@ require_relative 'routes/user'
 require_relative 'routes/sessions'
 require_relative 'routes/change_password'
 require_relative 'routes/station/get'
+require_relative 'routes/user_station/get'
 
 # Error handling
 error do

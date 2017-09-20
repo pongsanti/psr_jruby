@@ -2,7 +2,8 @@ module SmartTrack::Database::Repository
   class User
     attr_reader :id, :email, :display_name, :password, :admin,
       :created_at,
-      :user_session
+      :user_session,
+      :stations
   
     def initialize(attributes)
       @id = attributes[:id]
@@ -12,6 +13,7 @@ module SmartTrack::Database::Repository
       @admin = attributes[:admin]
       @created_at = attributes[:created_at]
       @user_session = attributes[:user_session]
+      @stations = attributes[:stations]
     end
 
     def created_at
@@ -31,9 +33,13 @@ module SmartTrack::Database::Repository
   end
 
   class UserRepo < ROM::Repository[:users]
-    relations :user_sessions
+    relations :user_sessions, :stations
 
     commands :create, update: :by_pk
+
+    def stations_by_user(user_id)
+      users.active.by_pk(user_id).combine(many: {stations: stations})
+    end
     
     def query_first(conditions)
       users.combine(one: {user_session: user_sessions}).map_to(User).where(conditions).one
