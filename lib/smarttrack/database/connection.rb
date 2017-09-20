@@ -1,4 +1,7 @@
+require 'sequel'
 require 'rom'
+
+Sequel.split_symbols = true
 
 module SmartTrack
   module Database

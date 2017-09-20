@@ -4,7 +4,8 @@ module SmartTrack::Database::Relations
 
     schema(:users, infer: true) do
       associations do
-        has_one :user_session
+        has_one   :user_session
+        has_many  :stations, through: :user_stations
       end
     end
 

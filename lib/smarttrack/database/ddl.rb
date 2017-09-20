@@ -16,12 +16,12 @@ module SmartTrack
       
       begin
         conf.default.drop_table(
-          :user_sessions, :users, :user_station)
+          :user_sessions, :users, :user_stations)
       rescue
         # do nothing
       end
 
-      conf.default.create_table(:users, engine: 'MyISAM', charset: 'tis620') do
+      conf.default.create_table(:users, charset: 'tis620') do
         primary_key :id
         String :email, null: false, unique: true
         String :password, null: false
@@ -32,7 +32,7 @@ module SmartTrack
         DateTime :deleted_at
       end
 
-      conf.default.create_table(:user_sessions, engine: 'MyISAM', charset: 'tis620') do
+      conf.default.create_table(:user_sessions, charset: 'tis620') do
         primary_key :id
         foreign_key :user_id, :users
         String :token, null: false
@@ -41,7 +41,7 @@ module SmartTrack
         DateTime :updated_at        
       end
 
-      conf.default.create_table(:user_station, engine: 'MyISAM', charset: 'tis620') do
+      conf.default.create_table(:user_stations, charset: 'tis620') do
         foreign_key :user_id, :users
         foreign_key :station_id, Sequel.qualify(TH_TRACKING_DB_NAME, 'tblstation'), key: 'stationid'
         primary_key [:user_id, :station_id]
