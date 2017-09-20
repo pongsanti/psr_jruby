@@ -14,12 +14,12 @@ module SmartTrack
     @rom = ROM.container(:sql, DB_URL) do |conf|
       conf.default.use_logger(Logger.new($stdout))
       
+       
+      conf.default.connection.drop_table?( 
+        :user_sessions, :user_stations, :users)
       begin
-        conf.default.drop_table(
-          :user_sessions, :users, :user_stations)
-      rescue
-        # do nothing
-      end
+        conf.default.connection.drop_view(:stations)
+      rescue; end
 
       conf.default.create_table(:users, charset: 'tis620') do
         primary_key :id
@@ -40,13 +40,16 @@ module SmartTrack
         DateTime :created_at
         DateTime :updated_at        
       end
-
+      
       conf.default.create_table(:user_stations, charset: 'tis620') do
         foreign_key :user_id, :users
-        foreign_key :station_id, Sequel.qualify(TH_TRACKING_DB_NAME, 'tblstation'), key: 'stationid'
+        Integer :station_id, null: false
+        
         primary_key [:user_id, :station_id]
       end
 
+      conf.default.connection.create_or_replace_view(:stations, "SELECT * FROM `#{TH_TRACKING_DB_NAME}`.`tblstation`")
+      
       connection = conf.default.connection
       connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',
         'ruchira@pongsiri.co.th', BCrypt::Password.create('1a2b3c4d5e'), 'Ruchira T.'].insert

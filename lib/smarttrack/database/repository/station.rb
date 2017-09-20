@@ -16,9 +16,9 @@ module SmartTrack::Database::Repository
     end
   end
 
-  class StationRepo < ROM::Repository[:gps_test__tblstation]  
+  class StationRepo < ROM::Repository[:stations]  
     def all
-      gps_test__tblstation.map_to(Station).index
+      stations.map_to(Station).index
     end
   end
 end
