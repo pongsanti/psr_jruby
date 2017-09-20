@@ -1,4 +1,4 @@
-describe 'Get users' do
+describe 'Get stations' do
   include_context 'database'
 
   let(:url)       {'/api/stations'}
