@@ -5,5 +5,9 @@ module SmartTrack::Database::Relations
         
       end
     end
+
+    def index
+      select(:stationid, :stationname)
+    end
   end
 end
