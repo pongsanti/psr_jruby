@@ -15,9 +15,8 @@ namespace '/api' do
     # @user_station_repo.create(user_id: user_id, station_id: 2)
     
     dataset = @user_repo.stations_by_user(user_id)
-    data = dataset.to_a
-    # puts data.to_s
+    data = dataset.one
     
-    [200, json(stations: data)]
+    [200, json(stations: data.stations)]
   end
 end
