@@ -16,7 +16,12 @@ namespace '/api' do
     
     dataset = @user_repo.stations_by_user(user_id)
     data = dataset.one
+
+
+    stations = data.stations.map do |st|
+      st.to_h
+    end
     
-    [200, json(stations: data.stations)]
+    [200, json(stations: stations)]
   end
 end
