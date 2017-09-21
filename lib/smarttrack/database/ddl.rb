@@ -9,7 +9,7 @@ module SmartTrack
     USER = 'root'
     PASS = 'root'
     DB_URL = "mysql2://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=#{USER}&password=#{PASS}&charset=utf8"
-    TH_TRACKING_DB_NAME = 'gps_test'
+    TH_TRACKING_DB_NAME = 'test_gps'
 
     @rom = ROM.container(:sql, DB_URL) do |conf|
       conf.default.use_logger(Logger.new($stdout))
@@ -54,7 +54,12 @@ module SmartTrack
       connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',
         'ruchira@pongsiri.co.th', BCrypt::Password.create('1a2b3c4d5e'), 'Ruchira T.'].insert
       connection['INSERT INTO users (email, password, display_name, admin) VALUES (?, ?, ?, ?)',
-        'popsicle@gmail.com', BCrypt::Password.create('1234'), 'Popsicle', true].insert        
+        'popsicle@gmail.com', BCrypt::Password.create('1234'), 'Popsicle', true].insert
+
+      connection['INSERT INTO user_stations (user_id, station_id) VALUES (?, ?)',
+        1, 1].insert
+      connection['INSERT INTO user_stations (user_id, station_id) VALUES (?, ?)',
+        1, 2].insert        
     end
   end
 end
