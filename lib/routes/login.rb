@@ -22,7 +22,9 @@ post '/login' do
     user_session = @user_repo.create(changeset)
 
     return [200, json(token: user_session.token,
-      user: { display_name: user.display_name,
+      user: {
+        id: user.id,
+        display_name: user.display_name,
         email: user.email,
         admin: user.admin })
     ]
