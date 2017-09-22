@@ -23,7 +23,6 @@ post '/login' do
 
     return [200, json(token: user_session.token,
       user: {
-        id: user.id,
         display_name: user.display_name,
         email: user.email,
         admin: user.admin })
