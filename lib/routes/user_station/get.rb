@@ -13,15 +13,12 @@ namespace '/api' do
 
     # @user_station_repo.create(user_id: user_id, station_id: 1)
     # @user_station_repo.create(user_id: user_id, station_id: 2)
-    
-    dataset = @user_repo.stations_by_user(user_id)
-    data = dataset.one
 
+    # user_stations_delete_cmd = @rom.commands[:user_stations][:delete]
+    # user_stations_delete_cmd.by_user_id(user_id: 999).call
 
-    stations = data.stations.map do |st|
-      st.to_h
-    end
-    
+    stations = @station_repo.by_user(user_id).to_a
+   
     [200, json(stations: stations)]
   end
 end

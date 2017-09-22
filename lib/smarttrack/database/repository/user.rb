@@ -36,10 +36,6 @@ module SmartTrack::Database::Repository
     relations :user_sessions, :stations
 
     commands :create, update: :by_pk
-
-    def stations_by_user(user_id)
-      users.active.by_pk(user_id).combine(many: {stations: stations})
-    end
     
     def query_first(conditions)
       users.combine(one: {user_session: user_sessions}).map_to(User).where(conditions).one
