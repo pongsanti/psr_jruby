@@ -20,5 +20,9 @@ module SmartTrack::Database::Repository
     def all
       stations.map_to(Station).index
     end
+
+    def by_user user_id
+      stations.map_to(Station).of_user(user_id)
+    end
   end
 end

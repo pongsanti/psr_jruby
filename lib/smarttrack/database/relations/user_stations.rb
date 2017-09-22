@@ -6,5 +6,9 @@ module SmartTrack::Database::Relations
         belongs_to :station,  foreign_key: :station_id
       end
     end
+
+    def by_user_id id
+      where(user_id: id)
+    end
   end
 end

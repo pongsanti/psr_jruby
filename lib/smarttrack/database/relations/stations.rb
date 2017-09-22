@@ -14,5 +14,9 @@ module SmartTrack::Database::Relations
     def index
       select(:stationid, :stationname)
     end
+
+    def of_user user_id
+      join(:user_stations, station_id: :stationid, user_id: user_id)
+    end
   end
 end

@@ -86,7 +86,7 @@ require_relative 'routes/user'
 require_relative 'routes/sessions'
 require_relative 'routes/change_password'
 require_relative 'routes/station/get'
-require_relative 'routes/user_station/get'
+require_relative 'routes/user_station'
 
 # Error handling
 error do
