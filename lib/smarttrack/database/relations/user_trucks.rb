@@ -10,5 +10,13 @@ module SmartTrack::Database::Relations
     def by_user_id id
       where(user_id: id)
     end
+
+    def by_id id
+      by_pk(id)
+    end
+
+    def active
+      where(deleted_at: nil)
+    end
   end
 end
