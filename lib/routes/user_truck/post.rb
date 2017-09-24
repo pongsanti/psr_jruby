@@ -27,7 +27,7 @@ namespace '/api' do
       end_at: @payload[:end_at]).map(:add_timestamps)
     user_truck = @user_truck_repo.create(changeset)
     
-    #[201, json(result: user.to_h)]
-    [201, json(message: 'OK')]
+    trucks = @truck_repo.by_user(user_id).to_a
+    [201, json(trucks: trucks)]
   end
 end

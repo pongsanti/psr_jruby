@@ -101,7 +101,9 @@ describe 'Post user truck' do
       post url, req_obj.to_json
 
       expect(last_response.status).to eq(201)
-      expect(last_response.body).to include('OK')
+      expect(last_response.body).to include('trucks',
+      'id', 'license_plate', 'brand', 'color',
+      'user_truck_id', 'start_at', 'end_at')
 
       trucks = truck_repo.by_user(1).to_a
       expect(trucks.size).to eq(1)
