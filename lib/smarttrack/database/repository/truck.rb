@@ -2,7 +2,7 @@ module SmartTrack::Database::Repository
   class Truck
     attr_reader :id, :license_plate, :brand, :color,
     # user_trucks attributes  
-    :start_at, :end_at
+    :user_truck_id, :start_at, :end_at
     
     def initialize(attributes)
       @id = attributes[:Truck_ID]
@@ -10,6 +10,7 @@ module SmartTrack::Database::Repository
       @brand = attributes[:Brand]
       @color = attributes[:Color]
 
+      @user_truck_id = attributes[:id]
       @start_at = attributes[:start_at]
       @end_at = attributes[:end_at]
     end
@@ -34,6 +35,7 @@ module SmartTrack::Database::Repository
         color: color
       }
 
+      hash = hash.merge({user_truck_id: user_truck_id}) if user_truck_id
       hash = hash.merge({start_at: start_at}) if start_at
       hash = hash.merge({end_at: end_at}) if end_at
 

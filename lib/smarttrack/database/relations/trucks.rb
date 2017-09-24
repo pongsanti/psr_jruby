@@ -19,7 +19,7 @@ module SmartTrack::Database::Relations
     end
 
     def select_user_trucks
-      select_append(user_trucks[:start_at], user_trucks[:end_at])
+      select_append(user_trucks[:id], user_trucks[:start_at], user_trucks[:end_at])
     end
 
     def active

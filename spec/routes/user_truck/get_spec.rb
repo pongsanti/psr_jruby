@@ -56,7 +56,7 @@ describe 'Get user trucks' do
       expect(last_response.status).to eq(200)
       expect(last_response.body).to include('trucks',
         'id', 'license_plate', 'brand', 'color',
-        'start_at', 'end_at')
+        'user_truck_id', 'start_at', 'end_at')
     end
   end
   
