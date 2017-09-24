@@ -49,7 +49,9 @@ module SmartTrack::Database::Repository
     end
 
     def by_user user_id
-      trucks.map_to(Truck).index.select_user_trucks.active.of_user(user_id)
+      trucks.map_to(Truck).index
+        .select_user_trucks.active_user_trucks
+        .active.of_user(user_id)
     end    
   end
 end

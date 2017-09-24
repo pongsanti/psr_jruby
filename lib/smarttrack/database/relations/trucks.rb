@@ -22,6 +22,10 @@ module SmartTrack::Database::Relations
       select_append(user_trucks[:id], user_trucks[:start_at], user_trucks[:end_at])
     end
 
+    def active_user_trucks
+      where(user_trucks[:deleted_at] => nil)
+    end
+
     def active
       where(IsActive: 1)
     end
