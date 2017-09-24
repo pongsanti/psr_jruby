@@ -14,6 +14,18 @@ module SmartTrack::Database::Repository
       @end_at = attributes[:end_at]
     end
     
+    def start_at
+      datetime_format @start_at if @start_at
+    end
+
+    def end_at
+      datetime_format @end_at if @end_at
+    end
+
+    def datetime_format datetime
+      datetime.strftime('%F %T')
+    end
+
     def to_json(options={})
       hash = {
         id: id,
