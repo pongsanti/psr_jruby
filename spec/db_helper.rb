@@ -21,7 +21,11 @@ module SmartTrack::Test
 
     def truck_repo
       SmartTrack::Database::Container.resolve(:truck_repo)
-    end    
+    end
+    
+    def user_truck_repo
+      SmartTrack::Database::Container.resolve(:user_truck_repo)
+    end
 
     def create_user(email, password = 'xxx')
       hash = BCrypt::Password.create(password)
