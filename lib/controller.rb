@@ -43,6 +43,7 @@ def setup(st_container)
   st_container.register(:station_repo, SmartTrack::Database::Repository::StationRepo.new(db_connection.rom))
   st_container.register(:user_station_repo, SmartTrack::Database::Repository::UserStationRepo.new(db_connection.rom))
   st_container.register(:truck_repo, SmartTrack::Database::Repository::TruckRepo.new(db_connection.rom))
+  st_container.register(:user_truck_repo, SmartTrack::Database::Repository::UserTruckRepo.new(db_connection.rom))
 end
 setup(st_container)
 
@@ -57,6 +58,7 @@ before do
   @station_repo = st_container.resolve(:station_repo)
   @user_station_repo = st_container.resolve(:user_station_repo)
   @truck_repo = st_container.resolve(:truck_repo)
+  @user_truck_repo = st_container.resolve(:user_truck_repo)
 
   req_body = request.body.read
   @payload = req_body.empty? ? {} : JSON.parse(req_body, symbolize_names: true)
@@ -90,7 +92,7 @@ require_relative 'routes/change_password'
 require_relative 'routes/station/get'
 require_relative 'routes/user_station'
 require_relative 'routes/truck/get'
-require_relative 'routes/user_truck/get'
+require_relative 'routes/user_truck'
 
 # Error handling
 error do
