@@ -90,6 +90,7 @@ require_relative 'routes/change_password'
 require_relative 'routes/station/get'
 require_relative 'routes/user_station'
 require_relative 'routes/truck/get'
+require_relative 'routes/user_truck/get'
 
 # Error handling
 error do
