@@ -9,15 +9,22 @@ module SmartTrack
     USER = 'root'
     PASS = 'root'
     DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=#{USER}&password=#{PASS}&charset=utf8"
+    TH_TRACKING_DB_NAME = 'gps_test'
 
     @rom = ROM.container(:sql, DB_URL) do |conf|
+      conf.default.use_logger(Logger.new($stdout))
+      
+       
+      conf.default.connection.drop_table?( 
+        :user_sessions,
+        :user_stations,
+        :user_trucks,
+        :users)
       begin
-        conf.default.drop_table(:user_sessions, :users)
-      rescue
-        # do nothing
-      end
+        conf.default.connection.drop_view(:stations)
+      rescue; end
 
-      conf.default.create_table(:users) do
+      conf.default.create_table(:users, charset: 'tis620') do
         primary_key :id
         String :email, null: false, unique: true
         String :password, null: false
@@ -28,7 +35,7 @@ module SmartTrack
         DateTime :deleted_at
       end
 
-      conf.default.create_table(:user_sessions) do
+      conf.default.create_table(:user_sessions, charset: 'tis620') do
         primary_key :id
         foreign_key :user_id, :users
         String :token, null: false
@@ -36,12 +43,37 @@ module SmartTrack
         DateTime :created_at
         DateTime :updated_at        
       end
+      
+      conf.default.create_table(:user_stations, charset: 'tis620') do
+        foreign_key :user_id, :users
+        Integer :station_id, null: false
+        
+        primary_key [:user_id, :station_id]
+      end
 
+      conf.default.connection.create_or_replace_view(:stations, "SELECT * FROM `#{TH_TRACKING_DB_NAME}`.`tblstation`")
+
+      conf.default.create_table(:user_trucks, charset: 'tis620') do
+        primary_key :id
+        foreign_key :user_id, :users, null: false
+        Integer :truck_id,  null: false
+        DateTime :start_at, null: false
+        DateTime :end_at,   null: false
+        DateTime :created_at
+        DateTime :updated_at
+        DateTime :deleted_at
+      end
+      
       connection = conf.default.connection
       connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',
         'ruchira@pongsiri.co.th', BCrypt::Password.create('1a2b3c4d5e'), 'Ruchira T.'].insert
       connection['INSERT INTO users (email, password, display_name, admin) VALUES (?, ?, ?, ?)',
-        'popsicle@gmail.com', BCrypt::Password.create('1234'), 'Popsicle', true].insert        
+        'popsicle@gmail.com', BCrypt::Password.create('1234'), 'Popsicle', true].insert
+
+      connection['INSERT INTO user_stations (user_id, station_id) VALUES (?, ?)',
+        1, 1].insert
+      connection['INSERT INTO user_stations (user_id, station_id) VALUES (?, ?)',
+        1, 2].insert        
     end
   end
 end

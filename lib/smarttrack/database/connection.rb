@@ -1,3 +1,4 @@
+require 'sequel'
 require 'rom'
 
 module SmartTrack
@@ -16,6 +17,10 @@ module SmartTrack
 
       def rom_config(db_url)
         @config = ROM::Configuration.new(:sql, db_url)
+
+        @config.commands(:user_stations) do
+          define(:delete)
+        end
       end
 
       def register_components()

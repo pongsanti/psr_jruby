@@ -2,7 +2,8 @@ module SmartTrack::Database::Repository
   class User
     attr_reader :id, :email, :display_name, :password, :admin,
       :created_at,
-      :user_session
+      :user_session,
+      :stations
   
     def initialize(attributes)
       @id = attributes[:id]
@@ -12,6 +13,7 @@ module SmartTrack::Database::Repository
       @admin = attributes[:admin]
       @created_at = attributes[:created_at]
       @user_session = attributes[:user_session]
+      @stations = attributes[:stations]
     end
 
     def created_at
@@ -31,7 +33,7 @@ module SmartTrack::Database::Repository
   end
 
   class UserRepo < ROM::Repository[:users]
-    relations :user_sessions
+    relations :user_sessions, :stations
 
     commands :create, update: :by_pk
     
@@ -43,20 +45,36 @@ module SmartTrack::Database::Repository
       query_first(email: email)
     end
 
-    def active_user(id)
-      users.map_to(User).where(id: id, deleted_at: nil).one
+    def find_by_like_email(text)
+      users.map_to(User).like(:email, text).active.to_a
     end
 
-    def active_users(per_page, page, order_col, direction = :asc)
+    def active_user(id)
+      users.map_to(User).active.by_pk(id).one
+    end
+
+    def active_users_dataset(per_page, page, order_col, direction = :asc, search_hash = nil)
       order_col = order_col.to_sym
 
-      rel = users.where(deleted_at: nil).per_page(per_page).page(page)
+      rel = users.active
+
+      # searching
+      if search_hash
+        search_hash.each do |key, value|
+          rel = rel.like(key, value)
+        end
+      end
+
+      # pagination
+      rel = rel.per_page(per_page).page(page)
+      
+      # ordering
       if (direction.to_sym == :asc)
         rel = rel.order(order_col)
       else
         rel = rel.order(order_col).reverse
       end
-      return rel.map_to(User).to_a
+      return rel.map_to(User)
     end
 
   end
