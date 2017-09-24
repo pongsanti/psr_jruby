@@ -55,7 +55,7 @@ module SmartTrack
 
       conf.default.create_table(:user_trucks, charset: 'tis620') do
         primary_key :id
-        foreign_key :user_id, :users
+        foreign_key :user_id, :users, null: false
         Integer :truck_id,  null: false
         DateTime :start_at, null: false
         DateTime :end_at,   null: false
