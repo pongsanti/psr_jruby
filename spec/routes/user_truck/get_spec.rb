@@ -36,6 +36,20 @@ describe 'Get user trucks' do
       rom.gateways[:default].connection["insert into user_trucks (user_id, truck_id, start_at, end_at) values (1, 1, current_timestamp, current_timestamp)"].insert
     end
 
+    it 'rejects if user id is not digit' do
+      get '/api/user_trucks/abc'
+
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('integer')
+    end
+
+    it 'rejects if user id is not existed' do
+      get '/api/user_trucks/9999'
+
+      expect(last_response.status).to eq(500)
+      expect(last_response.body).to include('not existed')
+    end    
+
     it 'can get user trucks list' do
       get url
 

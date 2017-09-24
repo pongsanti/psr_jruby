@@ -67,6 +67,9 @@ describe 'Patch user stations' do
 
       expect(last_response.status).to eq(200)
       expect(last_response.body).to include('stations', 'id', 'name')
+
+      stations = station_repo.by_user(1).to_a
+      expect(stations.size).to eq(3)
     end
   end
   

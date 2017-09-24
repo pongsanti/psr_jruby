@@ -15,6 +15,10 @@ module SmartTrack::Test
       SmartTrack::Database::Container.resolve(:session_repo)
     end
 
+    def station_repo
+      SmartTrack::Database::Container.resolve(:station_repo)
+    end
+
     def create_user(email, password = 'xxx')
       hash = BCrypt::Password.create(password)
       user = user_repo.create(email: email, password: hash)
