@@ -23,7 +23,10 @@ module SmartTrack::Database::Relations
     end
 
     def active_user_trucks
+      current = DateTime.now
       where(user_trucks[:deleted_at] => nil)
+      .where { user_trucks[:start_at] <= current }
+      .where { user_trucks[:end_at] >= current }
     end
 
     def active
