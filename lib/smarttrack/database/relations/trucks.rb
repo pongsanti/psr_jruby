@@ -15,11 +15,15 @@ module SmartTrack::Database::Relations
     end
 
     def index
-      select(:Truck_ID, :License_Plate, :Brand, :Color, :IsActive)
+      select(:Truck_ID, :License_Plate, :Brand, :Color)
     end
 
     def select_user_trucks
       select_append(user_trucks[:id], user_trucks[:start_at], user_trucks[:end_at])
+    end
+
+    def select_tblcarsets_vid
+      select_append(tblcarsets[:vid])
     end
 
     def active_user_trucks
@@ -35,6 +39,14 @@ module SmartTrack::Database::Relations
 
     def of_user user_id
       join(:user_trucks, truck_id: :Truck_ID, user_id: user_id).qualified
+    end
+
+    def with_vid
+      join(:tblcarsets, plate: :License_Plate).qualified
+    end
+
+    def by_plates plates
+      where(License_Plate: plates)
     end
   end
 end

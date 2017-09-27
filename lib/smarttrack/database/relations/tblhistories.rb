@@ -11,5 +11,13 @@ module SmartTrack::Database::Relations
     def index
       select(:vid, :gps_datetime, :latitude, :longitude)
     end
+
+    def by_vid vid
+      where(vid: vid)
+    end
+
+    def latest_one
+      order { gps_datetime.desc }
+    end
   end
 end
