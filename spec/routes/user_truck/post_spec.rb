@@ -5,8 +5,8 @@ describe 'Post user truck' do
   let(:mocktoken) {'mocktoken'}
   let(:req_obj)   {
     { truck_id: 1,
-      start_at: DateTime.now - 2,
-      end_at: DateTime.now + 2
+      start_at: (DateTime.now - 2).strftime('%F %T'),
+      end_at: (DateTime.now + 2).strftime('%F %T')
     }
   }
 
