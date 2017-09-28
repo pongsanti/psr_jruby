@@ -27,6 +27,17 @@ namespace '/api' do
       })
     end
 
+    # downcase hash keys
+    payload = payload.map { |p| downcase_hash(p) }
+
     [200, json(locations: payload)]
   end
+end
+
+def downcase_hash hash
+  result = {}
+  hash.each_pair do |k, v|
+    result.merge!(k.downcase => v)
+  end
+  result
 end
