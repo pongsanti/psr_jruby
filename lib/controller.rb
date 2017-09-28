@@ -95,7 +95,7 @@ require_relative 'routes/station/get'
 require_relative 'routes/user_station'
 require_relative 'routes/truck/get'
 require_relative 'routes/user_truck'
-require_relative 'routes/locations/get'
+require_relative 'routes/location/get'
 
 # Error handling
 error do
