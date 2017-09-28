@@ -13,6 +13,10 @@ module SmartTrack::Database::Repository
       datetime.strftime('%F %T')
     end
 
+    def gps_datetime
+      datetime_format(@gps_datetime) if @gps_datetime
+    end
+
     def to_json(options={})
       hash = {
         vid: vid,
