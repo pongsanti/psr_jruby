@@ -9,7 +9,7 @@ module SmartTrack
     USER = 'root'
     PASS = 'root'
     DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=#{USER}&password=#{PASS}&charset=utf8"
-    TH_TRACKING_DB_NAME = 'gps_test'
+    TH_TRACKING_DB_NAME = ENV['TH_TRACKING_DB_NAME']
 
     @rom = ROM.container(:sql, DB_URL) do |conf|
       conf.default.use_logger(Logger.new($stdout))
@@ -22,6 +22,8 @@ module SmartTrack
         :users)
       begin
         conf.default.connection.drop_view(:stations)
+        conf.default.connection.drop_view(:tblcarsets)
+        conf.default.connection.drop_view(:tblhistories)
       rescue; end
 
       conf.default.create_table(:users, charset: 'tis620') do
@@ -63,6 +65,9 @@ module SmartTrack
         DateTime :updated_at
         DateTime :deleted_at
       end
+
+      conf.default.connection.create_or_replace_view(:tblcarsets, "SELECT * FROM `#{TH_TRACKING_DB_NAME}`.`tblcarset` WHERE groupid = 1000")
+      conf.default.connection.create_or_replace_view(:tblhistories, "SELECT * FROM `#{TH_TRACKING_DB_NAME}`.`tblhistory` order by gps_datetime desc")
       
       connection = conf.default.connection
       connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',

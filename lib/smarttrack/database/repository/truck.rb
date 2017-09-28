@@ -2,7 +2,9 @@ module SmartTrack::Database::Repository
   class Truck
     attr_reader :id, :license_plate, :brand, :color,
     # user_trucks attributes  
-    :user_truck_id, :start_at, :end_at
+    :user_truck_id, :start_at, :end_at,
+    # tblcarsets attr
+    :vid
     
     def initialize(attributes)
       @id = attributes[:Truck_ID]
@@ -13,6 +15,8 @@ module SmartTrack::Database::Repository
       @user_truck_id = attributes[:id]
       @start_at = attributes[:start_at]
       @end_at = attributes[:end_at]
+
+      @vid = attributes[:vid]
     end
     
     def start_at
@@ -39,19 +43,35 @@ module SmartTrack::Database::Repository
       hash = hash.merge({start_at: start_at}) if start_at
       hash = hash.merge({end_at: end_at}) if end_at
 
+      hash = hash.merge({vid: vid}) if vid
+
       hash.to_json
     end
   end
 
   class TruckRepo < ROM::Repository[:trucks]
+    relations :users
+
     def all
       trucks.map_to(Truck).index.active
+    end
+
+    def users_with_trucks
+      users.combine(many: trucks.for_users).to_a
     end
 
     def by_user user_id
       trucks.map_to(Truck).index
         .select_user_trucks.active_user_trucks
         .active.of_user(user_id)
-    end    
+    end
+    
+    def with_vid plates
+      trucks.index
+      .select_tblcarsets_vid
+      .active
+      .with_vid
+      .by_plates(plates)
+    end
   end
 end

@@ -47,6 +47,7 @@ module SmartTrack::Test
     def create_user_session(email, session_token)
       user = create_user(email)
       create_session(user, session_token)
+      user
     end
 
     def create_admin_user_session(email, session_token)

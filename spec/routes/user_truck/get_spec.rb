@@ -33,8 +33,16 @@ describe 'Get user trucks' do
       header 'X-Authorization', mocktoken
 
       rom.gateways[:default].connection["INSERT INTO trucks (Truck_ID,Truck_Type_ID,Driver_ID,Location_ID,Truck_Status_ID,Overall_Weight,Axles,Wheels,Picture,License_Plate,License_Expiry,Insurance_Expiry,Brand,Color,Product_Year,Note,CREATED_DATE,CREATED_USER,CREATED_HOST,UPDATED_DATE,UPDATED_USER,UPDATED_HOST,IsActive,Owner) VALUES (1,2,-1,2,1,2000.00,2,4,'20150825101111_81-0129.jpg','81-0129','2014-12-31 00:00:00.000','2015-03-26 00:00:00.000','Isuzu','ฟ้า','1996-01-01 00:00:00.000','',NULL,NULL,NULL,'2016-05-04 12:53:53.000',NULL,'PSR-SERVER-31',1,1)"].insert
-      rom.gateways[:default].connection["insert into user_trucks (user_id, truck_id, start_at, end_at) values (1, 1, current_timestamp, current_timestamp)"].insert
+      # this record will be returned
+      rom.gateways[:default].connection["insert into user_trucks (user_id, truck_id, start_at, end_at) values (1, 1,
+        current_timestamp - INTERVAL 1 DAY,
+        current_timestamp + INTERVAL 1 DAY)"].insert
+      # filter out because deleted
       rom.gateways[:default].connection["insert into user_trucks (user_id, truck_id, start_at, end_at, deleted_at) values (1, 1, current_timestamp, current_timestamp, current_timestamp)"].insert
+      # filter out because start_at, end_at
+      rom.gateways[:default].connection["insert into user_trucks (user_id, truck_id, start_at, end_at) values (1, 1,
+        current_timestamp - INTERVAL 12 DAY,
+        current_timestamp - INTERVAL 11 DAY)"].insert      
     end
 
     it 'rejects if user id is not digit' do
