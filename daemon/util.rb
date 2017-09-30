@@ -1,12 +1,12 @@
 def truck_arrival_at_station(plate, locations)
   locations.find do |loc|
-    loc[:plate] == plate && loc[:stationid] != nil
+    loc[:plate] == plate && loc[:stationid].to_i != 0
   end
 end
 
 def truck_departure_from_station(plate, locations)
   locations.find do |loc|
-    loc[:plate] == plate && loc[:stationid] == nil
+    loc[:plate] == plate && loc[:stationid].to_i == 0
   end
 end
 
