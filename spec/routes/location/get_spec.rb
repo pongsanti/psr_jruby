@@ -31,7 +31,7 @@ describe 'Get locations' do
       expect(last_response.status).to eq(200)
       expect(last_response.body).to include('locations',
         'truck_id', 'license_plate', 'brand', 'color',
-        'gps_datetime', 'latitude', 'longitude')
+        'datetime', 'latitude', 'longitude')
     end
   end
   

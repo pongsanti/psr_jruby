@@ -45,6 +45,7 @@ def setup(st_container)
   st_container.register(:truck_repo, SmartTrack::Database::Repository::TruckRepo.new(db_connection.rom))
   st_container.register(:user_truck_repo, SmartTrack::Database::Repository::UserTruckRepo.new(db_connection.rom))
   st_container.register(:tblhistory_repo, SmartTrack::Database::Repository::TblhistoryRepo.new(db_connection.rom))
+  st_container.register(:tblrealtime_repo, SmartTrack::Database::Repository::TblrealtimeRepo.new(db_connection.rom))
 end
 setup(st_container)
 
@@ -61,6 +62,7 @@ before do
   @truck_repo = st_container.resolve(:truck_repo)
   @user_truck_repo = st_container.resolve(:user_truck_repo)
   @tblhistory_repo = st_container.resolve(:tblhistory_repo)
+  @tblrealtime_repo = st_container.resolve(:tblrealtime_repo)
 
   req_body = request.body.read
   @payload = req_body.empty? ? {} : JSON.parse(req_body, symbolize_names: true)
