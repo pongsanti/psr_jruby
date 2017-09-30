@@ -14,7 +14,7 @@ PORT = '3306'
 DATABASE_NAME = ENV["SINATRA_ENV"] == 'test' ? 'smarttrack_test' : 'smarttrack'
 USER = 'root'
 PASS = 'root'
-DB_URL = "mysql2://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=#{USER}&password=#{PASS}&charset=utf8"
+DB_URL = "jdbc:mysql://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=#{USER}&password=#{PASS}&charset=utf8"
 
 DB = Sequel.connect(DB_URL)
 DB.loggers << Logger.new(LOG_FILE, 10)
