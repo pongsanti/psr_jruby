@@ -19,7 +19,7 @@ namespace '/api' do
 
     # merge truck data with location data
     payload = trucks_with_ss.map do |t|
-      loc = locations.select { |loc| loc.serial_sim == t.serial_sim } [0]
+      loc = locations.find { |loc| loc.serial_sim == t.serial_sim }
       t.to_h.merge({
         datetime: loc.server_datetime,
         latitude: loc.lattitude,
