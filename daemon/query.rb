@@ -10,13 +10,14 @@ def active_user_trucks(db)
 end
 
 def locations_by_plates(db, plates)
+  now = DateTime.now
   histories = db[:tblhistories]
     .select(Sequel[:tblhistories][:vid], :plate, :gps_datetime,
       :latitude, :longitude, Sequel[:tblhistories][:stationid])
     .left_join(:tblcarsets, vid: :vid)
     .where(plate: plates)
     .order(Sequel.desc(:gps_datetime))
-    #.where { gps_datetime >= now - (3 * MINUTE) }
+    .where { gps_datetime >= now - (3 * MINUTE) }
   
     location_plates = Set.new
     locations = []
