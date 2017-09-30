@@ -65,12 +65,20 @@ module SmartTrack::Database::Repository
         .select_user_trucks.active_user_trucks
         .active.of_user(user_id)
     end
+
+    def with_serial_sim plates
+      trucks.index
+      .select_tblcarsets_serial_sim
+      .active
+      .with_tblcarsets
+      .by_plates(plates)
+    end
     
     def with_vid plates
       trucks.index
       .select_tblcarsets_vid
       .active
-      .with_vid
+      .with_tblcarsets
       .by_plates(plates)
     end
   end

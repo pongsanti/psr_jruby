@@ -26,6 +26,10 @@ module SmartTrack::Database::Relations
       select_append(tblcarsets[:vid])
     end
 
+    def select_tblcarsets_serial_sim
+      select_append(tblcarsets[:serial_sim])
+    end
+
     def active_user_trucks
       current = DateTime.now
       where(user_trucks[:deleted_at] => nil)
@@ -41,7 +45,7 @@ module SmartTrack::Database::Relations
       join(:user_trucks, truck_id: :Truck_ID, user_id: user_id).qualified
     end
 
-    def with_vid
+    def with_tblcarsets
       join(:tblcarsets, plate: :License_Plate).qualified
     end
 

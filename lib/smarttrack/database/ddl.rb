@@ -23,6 +23,7 @@ module SmartTrack
       begin
         conf.default.connection.drop_view(:stations)
         conf.default.connection.drop_view(:tblcarsets)
+        conf.default.connection.drop_view(:tblrealtimes)
         conf.default.connection.drop_view(:tblhistories)
       rescue; end
 
@@ -67,7 +68,19 @@ module SmartTrack
       end
 
       conf.default.connection.create_or_replace_view(:tblcarsets, "SELECT * FROM `#{TH_TRACKING_DB_NAME}`.`tblcarset` WHERE groupid = 1000")
-      conf.default.connection.create_or_replace_view(:tblhistories, "SELECT * FROM `#{TH_TRACKING_DB_NAME}`.`tblhistory` order by gps_datetime desc")
+      conf.default.connection.create_or_replace_view(:tblrealtimes, "SELECT * FROM `#{TH_TRACKING_DB_NAME}`.`tblrealtime`")
+      conf.default.connection.create_or_replace_view(:tblhistories, "SELECT * FROM `#{TH_TRACKING_DB_NAME}`.`tblhistory`")
+
+      conf.default.create_table(:user_truck_stations, charset: 'tis620') do
+        primary_key :id
+        foreign_key :user_truck_id, :user_trucks, null: false
+        Integer :station_id,  null: false
+        DateTime :arrived_at, null: false
+        DateTime :departed_at
+        DateTime :created_at
+        DateTime :updated_at
+        DateTime :deleted_at
+      end      
       
       connection = conf.default.connection
       connection['INSERT INTO users (email, password, display_name) VALUES (?, ?, ?)',
