@@ -10,6 +10,7 @@ def active_user_trucks(db)
 end
 
 def locations_by_plates(db, plates)
+  now = DateTime.now
   histories = db[:tblhistories]
     .select(Sequel[:tblhistories][:vid], :plate, :gps_datetime,
       :latitude, :longitude, Sequel[:tblhistories][:stationid])
