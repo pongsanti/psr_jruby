@@ -17,6 +17,7 @@ module SmartTrack
        
       conf.default.connection.drop_table?( 
         :user_sessions,
+        :user_truck_stations,
         :user_stations,
         :user_trucks,
         :users)
