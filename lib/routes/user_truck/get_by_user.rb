@@ -3,7 +3,7 @@ get_user_trucks_schema = Dry::Validation.Form do
 end
 
 namespace '/api' do
-  get '/user_trucks/:user_id' do
+  get '/user_trucks/user/:user_id' do
     authorize_admin? env
     
     user_id = params['user_id']
