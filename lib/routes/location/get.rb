@@ -1,43 +1,36 @@
 namespace '/api' do
   get '/locations' do
-    authorize? env    
-    # user allowed active trucks
-    trucks = @truck_repo.by_user(@user.id).to_a
-    return [200, json(locations: [])] if trucks.empty?
+    authorize? env
+
+    current = DateTime.now
+
+    ut = Sequel[:user_trucks]
+    tr = Sequel[:trucks]
+
+    payload = @sequel[:user_trucks]
+      .select(
+        as(ut[:id], :user_truck_id),
+        as(tr[:License_Plate], :license_plate),
+        as(tr[:Brand], :brand),
+        as(tr[:Color], :color),
+        as(:server_datetime, :datetime),
+        as(:lattitude, :latitude),
+        :longitude)
+      .where(user_id: @user.id, ut[:deleted_at] => nil)
+      .where { ut[:start_at] <= current }
+      .where { ut[:end_at] >= current }
+      .left_join(:trucks, Truck_ID: :truck_id, IsActive: 1)
+      .left_join(:tblcarsets, plate: :License_Plate)
+      .left_join(:tblrealtimes, serial_sim: :serial_sim)
+      .order(ut[:id])
+      .all
     
-    # find all truck's plates
-    plates = trucks.map { |t| t.license_plate }
-    # find serial_sims from truck's plates
-    trucks_with_ss = @truck_repo.with_serial_sim(plates).to_a
-    return [200, json(locations: [])] if trucks_with_ss.empty?
-    
-    # find locations from serial_sim
-    locations = trucks_with_ss.map do |t|
-      @tblrealtime_repo.by_serial_sim(t.serial_sim).first
-    end
-    return [200, json(locations: [])] if locations.empty?
-
-    # merge truck data with location data
-    payload = trucks_with_ss.map do |t|
-      loc = locations.find { |loc| loc.serial_sim == t.serial_sim }
-      t.to_h.merge({
-        datetime: loc.server_datetime,
-        latitude: loc.lattitude,
-        longitude: loc.longitude
-      }) if loc
+    locations = payload.map do |loc|
+      datetime = loc[:datetime]
+      loc[:datetime] = datetime_format(datetime) if datetime
+      loc
     end
 
-    # downcase hash keys
-    payload = payload.map { |p| downcase_hash(p) }
-
-    [200, json(locations: payload)]
+    [200, json(locations: locations)]
   end
-end
-
-def downcase_hash hash
-  result = {}
-  hash.each_pair do |k, v|
-    result.merge!(k.downcase => v)
-  end
-  result
 end

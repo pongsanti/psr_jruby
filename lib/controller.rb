@@ -46,6 +46,7 @@ def setup(st_container)
   st_container.register(:user_truck_repo, SmartTrack::Database::Repository::UserTruckRepo.new(db_connection.rom))
   st_container.register(:tblhistory_repo, SmartTrack::Database::Repository::TblhistoryRepo.new(db_connection.rom))
   st_container.register(:tblrealtime_repo, SmartTrack::Database::Repository::TblrealtimeRepo.new(db_connection.rom))
+  st_container.register(:user_truck_station_repo, SmartTrack::Database::Repository::UserTruckStationRepo.new(db_connection.rom))
 end
 setup(st_container)
 
@@ -54,6 +55,7 @@ include SmartTrack::TokenAuth
 # Hooks
 before do
   @rom = st_container.resolve(:rom)
+  @sequel = st_container.resolve(:sequel)
   @util = st_container.resolve(:util)
   @user_repo = st_container.resolve(:user_repo)
   @session_repo = st_container.resolve(:session_repo)
@@ -63,6 +65,7 @@ before do
   @user_truck_repo = st_container.resolve(:user_truck_repo)
   @tblhistory_repo = st_container.resolve(:tblhistory_repo)
   @tblrealtime_repo = st_container.resolve(:tblrealtime_repo)
+  @uts_repo = st_container.resolve(:user_truck_station_repo)
 
   req_body = request.body.read
   @payload = req_body.empty? ? {} : JSON.parse(req_body, symbolize_names: true)
@@ -89,6 +92,16 @@ get '/protected' do
   json(message: 'This is an authenticated request!')
 end
 
+helpers do
+  def as(col, as)
+    Sequel.as(col, as)
+  end
+  
+  def datetime_format datetime
+    datetime.strftime('%F %T')
+  end
+end
+
 require_relative 'routes/login'
 require_relative 'routes/user'
 require_relative 'routes/sessions'
@@ -98,6 +111,7 @@ require_relative 'routes/user_station'
 require_relative 'routes/truck/get'
 require_relative 'routes/user_truck'
 require_relative 'routes/location/get'
+require_relative 'routes/user_truck_station/get'
 
 # Error handling
 error do

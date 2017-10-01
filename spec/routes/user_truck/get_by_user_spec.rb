@@ -1,7 +1,7 @@
 describe 'Get user trucks' do
   include_context 'database'
 
-  let(:url)       {'/api/user_trucks/1'}
+  let(:url)       {'/api/user_trucks/user/1'}
   let(:mocktoken) {'mocktoken'}
 
   context 'in unauthenticated context' do
@@ -46,14 +46,14 @@ describe 'Get user trucks' do
     end
 
     it 'rejects if user id is not digit' do
-      get '/api/user_trucks/abc'
+      get '/api/user_trucks/user/abc'
 
       expect(last_response.status).to eq(500)
       expect(last_response.body).to include('integer')
     end
 
     it 'rejects if user id is not existed' do
-      get '/api/user_trucks/9999'
+      get '/api/user_trucks/user/9999'
 
       expect(last_response.status).to eq(500)
       expect(last_response.body).to include('not existed')
