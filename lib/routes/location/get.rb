@@ -6,7 +6,6 @@ namespace '/api' do
 
     ut = Sequel[:user_trucks]
     tr = Sequel[:trucks]
-    cs = Sequel[:tblcarsets]
 
     payload = @sequel[:user_trucks]
       .select(
@@ -14,7 +13,6 @@ namespace '/api' do
         as(tr[:License_Plate], :license_plate),
         as(tr[:Brand], :brand),
         as(tr[:Color], :color),
-        cs[:serial_sim],
         as(:server_datetime, :datetime),
         as(:lattitude, :latitude),
         :longitude)
