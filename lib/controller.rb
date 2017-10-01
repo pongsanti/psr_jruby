@@ -54,6 +54,7 @@ include SmartTrack::TokenAuth
 # Hooks
 before do
   @rom = st_container.resolve(:rom)
+  @sequel = st_container.resolve(:sequel)
   @util = st_container.resolve(:util)
   @user_repo = st_container.resolve(:user_repo)
   @session_repo = st_container.resolve(:session_repo)
@@ -87,6 +88,16 @@ get '/protected' do
 
   content_type :json
   json(message: 'This is an authenticated request!')
+end
+
+helpers do
+  def as(col, as)
+    Sequel.as(col, as)
+  end
+  
+  def datetime_format datetime
+    datetime.strftime('%F %T')
+  end
 end
 
 require_relative 'routes/login'
