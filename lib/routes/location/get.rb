@@ -6,6 +6,7 @@ namespace '/api' do
 
     ut = Sequel[:user_trucks]
     tr = Sequel[:trucks]
+    rt = Sequel[:tblrealtimes]
 
     payload = @sequel[:user_trucks]
       .select(
@@ -15,7 +16,7 @@ namespace '/api' do
         as(tr[:Color], :color),
         as(:server_datetime, :datetime),
         as(:lattitude, :latitude),
-        :longitude)
+        :longitude, rt[:status], rt[:speed])
       .where(user_id: @user.id, ut[:deleted_at] => nil)
       .where { ut[:start_at] <= current }
       .where { ut[:end_at] >= current }
@@ -28,9 +29,26 @@ namespace '/api' do
     locations = payload.map do |loc|
       datetime = loc[:datetime]
       loc[:datetime] = datetime_format(datetime) if datetime
+
+      status = loc[:status]
+      loc[:status] = tbl_realtime_status_text(status) if status
+      
       loc
     end
 
     [200, json(locations: locations)]
+  end
+end
+
+def tbl_realtime_status_text (status)
+  case status
+  when '20'; 'Stop'
+  when '21'; 'Start'
+  when '22'; 'OSpeed'
+  when '23'; 'Idle'
+  when '24'; 'GPSLost'
+  when '25'; 'Normal'
+  when '26'; 'LStop'
+  else 'N/A'
   end
 end
