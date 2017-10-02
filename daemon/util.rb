@@ -12,7 +12,7 @@ end
 
 def station_for_user(user_stations, user_id, station_id)
   user_stations.any? do |us|
-    us[:user_id] == user_id && us[:station_id] = station_id
+    us[:user_id] == user_id && us[:station_id] == station_id
   end
 end
 
