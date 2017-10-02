@@ -17,8 +17,8 @@ PASS = 'root'
 DB_URL = "mysql2://#{HOST}:#{PORT}/#{DATABASE_NAME}?user=#{USER}&password=#{PASS}&charset=utf8"
 
 DB = Sequel.connect(DB_URL)
-DB.loggers << Logger.new(LOG_FILE, 10)
 LOG = Logger.new(LOG_FILE, 10)
+DB.loggers << LOG
 run_count = 0
 
 def run
@@ -53,7 +53,7 @@ def run
     location = truck_arrival_at_station(plate, locations)
     if location
       LOG.info("Found location #{location}")
-      station_id = location[:stationid]
+      station_id = location[:stationid].to_i
       if station_for_user(user_stations, user_id, station_id)
         LOG.info("Station #{station_id} is for user #{user_id}")
         LOG.info("Checking if the arrival has been recorded...")
